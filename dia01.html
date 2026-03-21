@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-900 - Dia 01 - Fundamentos de IA e Ética</title>
+    <style>
+        :root {
+            --senai-red: #E30613;
+            --senai-gray: #333333;
+            --senai-light-gray: #F4F4F4;
+            --senai-white: #FFFFFF;
+            --code-bg: #282c34;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--senai-light-gray);
+            color: var(--senai-gray);
+            overflow: hidden; /* Evita scroll fora do slide */
+        }
+
+        /* Barra Superior */
+        header {
+            background-color: var(--senai-red);
+            color: var(--senai-white);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        /* Slide Container */
+        #slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 50px;
+        }
+
+        .slide {
+            display: none;
+            width: 85%;
+            height: 75%;
+            background: var(--senai-white);
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            position: relative;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--senai-red);
+            border-bottom: 3px solid var(--senai-red);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 2.2rem;
+        }
+
+        p, li {
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        ul {
+            margin-top: 20px;
+        }
+
+        li {
+            margin-bottom: 15px;
+        }
+
+        /* Rodapé */
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: var(--senai-white);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            z-index: 1000;
+        }
+
+        /* Navegação */
+        .nav-buttons button {
+            background-color: var(--senai-red);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 10px;
+            transition: opacity 0.3s;
+        }
+
+        .nav-buttons button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .nav-buttons button:hover:not(:disabled) {
+            opacity: 0.8;
+        }
+
+        /* Caixas de Destaque */
+        .important-box {
+            background-color: #fff3f3;
+            border-left: 10px solid var(--senai-red);
+            padding: 20px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        .example-box {
+            background-color: #eef2f7;
+            border-left: 10px solid #2c3e50;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Código */
+        code {
+            background-color: var(--code-bg);
+            color: #abb2bf;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        /* Diagrama CSS Simples */
+        .diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .node {
+            border: 2px solid var(--senai-red);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            background: white;
+            font-weight: bold;
+            min-width: 120px;
+        }
+
+        .arrow {
+            font-size: 2rem;
+            color: var(--senai-red);
+        }
+
+        /* Capa */
+        .capa {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--senai-red) 0%, #b3050f 100%);
+            color: white;
+        }
+
+        .capa h1 {
+            font-size: 4rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .capa h2 {
+            color: white;
+            border: none;
+            font-size: 1.8rem;
+            margin-top: 20px;
+        }
+
+        .slide-number {
+            font-weight: bold;
+            color: var(--senai-gray);
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+            margin: 10px auto;
+            display: block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .img-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>AI-900: Fundamentos de IA no Microsoft Azure</h1>
+    <span>Visão Geral e Ética</span>
+</header>
+
+<div id="slide-container">
+
+    <!-- Slide 1: Capa -->
+    <section class="slide active capa">
+        <h1>AI-900</h1>
+        <h2>Visão Geral da IA e os Imperativos da Responsabilidade Ética</h2>
+    </section>
+
+    <!-- Slide 2: Agenda -->
+    <section class="slide">
+        <h2>Agenda da Aula</h2>
+        <ul>
+            <li>O que é Inteligência Artificial? (Conceitos e História)</li>
+            <li>A Estrutura da IA no Azure: As 5 Cargas de Trabalho.</li>
+            <li>Introdução ao Aprendizado de Máquina (Machine Learning).</li>
+            <li>Os Seis Pilares da IA Responsável (Ética e Governança).</li>
+            <li>Navegação no Microsoft Azure AI Foundry.</li>
+            <li>Laboratórios Práticos do Dia.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 3: Objetivos de Aprendizagem -->
+    <section class="slide">
+        <h2>Objetivos de Aprendizagem</h2>
+        <p>Ao final deste dia, você será capaz de:</p>
+        <ul>
+            <li>Definir IA e distinguir de Machine Learning e Data Science.</li>
+            <li>Identificar qual serviço do Azure usar para cada problema de negócio.</li>
+            <li>Explicar os riscos éticos de uma IA mal governada.</li>
+            <li>Navegar com confiança no Portal do Azure e AI Foundry.</li>
+        </ul>
+        <div class="important-box">
+            Foco no Exame: A ética representa cerca de 15-20% da prova AI-900!
+        </div>
+    </section>
+
+    <!-- Slide 4: O que é Inteligência Artificial? -->
+    <section class="slide">
+        <h2>O que é Inteligência Artificial?</h2>
+        <p>IA é a capacidade de um sistema de software imitar comportamentos humanos, como:</p>
+        <ul>
+            <li><strong>Percepção:</strong> "Ver" o mundo através de câmeras e sensores.</li>
+            <li><strong>Aprendizado:</strong> Melhorar o desempenho com base em dados passados.</li>
+            <li><strong>Raciocínio:</strong> Tirar conclusões a partir de informações incompletas.</li>
+            <li><strong>Linguagem:</strong> Entender e gerar fala ou texto humano.</li>
+        </ul>
+        <div class="example-box">
+            <strong>Analogia:</strong> Pense na IA como um assistente que aprendeu a ler milhões de livros em segundos e agora pode te ajudar a resumir um contrato ou identificar uma peça defeituosa em uma fábrica.
+        </div>
+    </section>
+
+    <!-- Slide 5: Breve História e Contexto -->
+    <section class="slide">
+        <h2>Breve História: Da Teoria à Prática</h2>
+        <ul>
+            <li><strong>Anos 50:</strong> Alan Turing e a pergunta "Podem as máquinas pensar?". Ele queria criar máquinas que pudessem pensar, como os humanos. Porém o poder computacional da nuvem na época era limitado.</li>
+            <li><strong>Anos 80-90:</strong> Sistemas especialistas e lógica formal. Se uma pessoa está com tosse e tem febre, então o possível diagnóstico é gripe</li>
+            <li><strong>Anos 2010 (Big Data):</strong> A explosão de dados permitiu que os algoritmos finalmente funcionassem. Redes sociais, smartphones, sensores, internet.</li>
+            <li><strong>Hoje (IA Generativa):</strong> Modelos como o GPT-4 que não apenas analisam, mas criam.</li>
+        </ul>
+        <p>A IA não é nova, o que mudou foi o <strong>poder computacional da nuvem</strong> (como o Azure).</p>
+    </section>
+
+    <!-- Slide 6: IA no Nosso Dia a Dia -->
+    <section class="slide">
+        <h2>Onde a IA já está presente?</h2>
+        <p>Você provavelmente usou IA hoje sem perceber:</p>
+        <ul>
+            <li><strong>Recomendações:</strong> Netflix, Spotify e Amazon.</li>
+            <li><strong>Filtros de Spam:</strong> Seu e-mail bloqueando mensagens maliciosas.</li>
+            <li><strong>Assistentes de Voz:</strong> Siri, Alexa e o Google Assistente.</li>
+            <li><strong>Navegação:</strong> Google Maps e Waze calculando a melhor rota.</li>
+        </ul>
+        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80" alt="Tecnologia">
+        <div class="img-caption">A IA está integrada em quase todos os dispositivos modernos.</div>
+    </section>
+
+    <!-- Slide 7: IA na Indústria (Foco SENAI) -->
+    <section class="slide">
+        <h2>O Impacto na Indústria e Mercado</h2>
+        <p>Por que o profissional do SENAI precisa saber IA?</p>
+        <ul>
+            <li><strong>Manutenção Preditiva:</strong> Prever quando uma máquina vai quebrar antes que aconteça.</li>
+            <li><strong>Controle de Qualidade:</strong> Visão computacional detectando microfissuras em peças.</li>
+            <li><strong>Otimização Logística:</strong> Gestão de estoque inteligente e rotas de entrega.</li>
+            <li><strong>Segurança do Trabalho:</strong> Detectar se os funcionários estão usando EPIs via câmeras.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 8: O Ecossistema de Dados -->
+    <section class="slide">
+        <h2>IA vs Machine Learning vs Data Science</h2>
+        <p>Não confunda os termos:</p>
+        <div class="diagram">
+            <div class="node">Data Science<br>(Insight)</div>
+            <div class="arrow">→</div>
+            <div class="node">Machine Learning<br>(Algoritmo)</div>
+            <div class="arrow">→</div>
+            <div class="node">AI<br>(Ação)</div>
+        </div>
+        <ul>
+            <li><strong>Data Science:</strong> O campo que estuda como extrair valor dos dados.</li>
+            <li><strong>Machine Learning:</strong> A técnica de treinar modelos com dados para fazer previsões.</li>
+            <li><strong>AI:</strong> O sistema final que utiliza o modelo para interagir com o mundo.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 9: Estrutura da IA no Azure -->
+    <section class="slide">
+        <h2>A Estrutura da IA no Azure</h2>
+        <p>A Microsoft organiza os serviços de IA em <strong>5 grandes cargas de trabalho</strong>. Você precisa decorar estas categorias!</p>
+        <ol>
+            <li><strong>Machine Learning:</strong> A base de tudo.</li>
+            <li><strong>Detecção de Anomalias:</strong> Identificar o "estranho".</li>
+            <li><strong>Visão Computacional:</strong> Ver e entender imagens.</li>
+            <li><strong>Processamento de Linguagem Natural (NLP):</strong> Ler e falar.</li>
+            <li><strong>Mineração de Conhecimento:</strong> Buscar em dados ocultos.</li>
+        </ol>
+    </section>
+
+    <!-- Slide 10: Carga de Trabalho 1 - Machine Learning -->
+    <section class="slide">
+        <h2>1. Aprendizado de Máquina (ML)</h2>
+        <p>É o processo de usar dados históricos para treinar um modelo preditivo.</p>
+        <ul>
+            <li><strong>Como funciona:</strong> Fornecemos dados de entrada e as respostas corretas. O algoritmo "aprende" o padrão.</li>
+            <li><strong>Exemplo:</strong> Prever o preço de uma casa com base no tamanho, bairro e número de quartos.</li>
+        </ul>
+        <div class="example-box">
+            <strong>Serviço Azure:</strong> Azure Machine Learning Studio.
+        </div>
+    </section>
+
+    <!-- Slide 11: Carga de Trabalho 2 - Detecção de Anomalias -->
+    <section class="slide">
+        <h2>2. Detecção de Anomalias</h2>
+        <p>Identifica automaticamente padrões divergentes em séries temporais.</p>
+        <ul>
+            <li><strong>Como funciona:</strong> O sistema aprende o que é o "normal" e alerta quando algo sai da curva.</li>
+            <li><strong>Exemplo:</strong> Um banco detectando uma compra suspeita no seu cartão de crédito em outro país.</li>
+            <li><strong>Indústria:</strong> Detecção de picos de temperatura em caldeiras.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 12: Carga de Trabalho 3 - Visão Computacional -->
+    <section class="slide">
+        <h2>3. Visão Computacional</h2>
+        <p>Permite que softwares interpretem o mundo visual.</p>
+        <ul>
+            <li><strong>Classificação de Imagem:</strong> O que tem na foto? (Ex: "É um parafuso").</li>
+            <li><strong>Detecção de Objetos:</strong> Onde está na foto? (Ex: "Há 3 parafusos nesta mesa").</li>
+            <li><strong>Reconhecimento Óptico de Caracteres (OCR):</strong> Ler o texto de uma placa ou documento escaneado.</li>
+            <li><strong>Análise Facial:</strong> Detectar rostos e atributos.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 13: Carga de Trabalho 4 - NLP -->
+    <section class="slide">
+        <h2>4. Processamento de Linguagem Natural (NLP)</h2>
+        <p>A ponte entre a linguagem humana e o código do computador.</p>
+        <ul>
+            <li><strong>Análise de Sentimento:</strong> Este comentário é positivo ou negativo?</li>
+            <li><strong>Tradução:</strong> Traduzir texto ou fala em tempo real.</li>
+            <li><strong>Reconhecimento de Entidades:</strong> Identificar nomes, datas e locais em um texto.</li>
+            <li><strong>Sumarização:</strong> Resumir um texto longo em poucos tópicos.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 14: Carga de Trabalho 5 - Mineração de Conhecimento -->
+    <section class="slide">
+        <h2>5. Mineração de Conhecimento</h2>
+        <p>Extração de insights de grandes volumes de dados não estruturados (PDFs, Imagens, Vídeos).</p>
+        <ul>
+            <li><strong>Cenário:</strong> Você tem 50.000 contratos em PDF e precisa saber quais vencem em Dezembro.</li>
+            <li><strong>Solução:</strong> O sistema indexa, lê o OCR, entende o texto e torna tudo pesquisável como o Google.</li>
+        </ul>
+        <div class="example-box">
+            <strong>Serviço Azure:</strong> Azure AI Search.
+        </div>
+    </section>
+
+    <!-- Slide 15: O que é IA Generativa? -->
+    <section class="slide">
+        <h2>A Nova Carga: IA Generativa</h2>
+        <p>Embora faça parte de ML e NLP, a IA Generativa ganhou destaque próprio.</p>
+        <ul>
+            <li><strong>Diferença:</strong> IAs tradicionais apenas classificam (É um gato?). A IA Generativa **cria** (Desenhe um gato no espaço).</li>
+            <li><strong>Modelos:</strong> GPT (Texto), DALL-E (Imagem), Codex (Código).</li>
+            <li><strong>Azure:</strong> Serviço Azure OpenAI.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 16: IA Responsável: Por que é Crítico? -->
+    <section class="slide">
+        <h2>A Era da IA Responsável</h2>
+        <p>IA não é perfeita. Se os dados de treinamento tiverem preconceitos, o modelo será preconceituoso.</p>
+        <p>A Microsoft definiu **6 princípios fundamentais** para garantir que a IA beneficie a todos sem causar danos.</p>
+        <div class="important-box">
+            "Com grandes poderes vêm grandes responsabilidades." - Este slide é a alma da prova AI-900.
+        </div>
+    </section>
+
+    <!-- Slide 17: Pilar 1 - Equidade (Fairness) -->
+    <section class="slide">
+        <h2>Pilar 1: Equidade (Fairness)</h2>
+        <p>Sistemas de IA devem tratar todas as pessoas de forma imparcial.</p>
+        <ul>
+            <li><strong>O Problema:</strong> Se um sistema de contratação for treinado apenas com currículos de homens, ele pode descartar currículos de mulheres automaticamente.</li>
+            <li><strong>Exemplo:</strong> Garantir que sistemas de reconhecimento facial funcionem igualmente bem para todos os tons de pele.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 18: Pilar 2 - Confiabilidade e Segurança -->
+    <section class="slide">
+        <h2>Pilar 2: Confiabilidade e Segurança</h2>
+        <p>Sistemas de IA devem operar de forma previsível e segura, mesmo em condições adversas.</p>
+        <ul>
+            <li><strong>Cenário:</strong> Um carro autônomo deve ser confiável na chuva, na neve e em situações de perigo imprevisto.</li>
+            <li><strong>Segurança:</strong> Proteção contra ataques cibernéticos que tentam enganar o modelo (Adversarial Attacks).</li>
+        </ul>
+    </section>
+
+    <!-- Slide 19: Pilar 3 - Privacidade e Segurança -->
+    <section class="slide">
+        <h2>Pilar 3: Privacidade e Segurança</h2>
+        <p>Os sistemas de IA devem ser seguros e respeitar a privacidade do usuário.</p>
+        <ul>
+            <li><strong>Conformidade:</strong> Alinhamento com leis como LGPD (Brasil) e GDPR (Europa).</li>
+            <li><strong>Dados Sensíveis:</strong> IAs médicas não devem expor o histórico de saúde dos pacientes para terceiros.</li>
+            <li><strong>Treinamento:</strong> Garantir que dados privados usados no treino não possam ser extraídos do modelo final.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 20: Pilar 4 - Inclusividade -->
+    <section class="slide">
+        <h2>Pilar 4: Inclusividade</h2>
+        <p>A IA deve trazer benefícios a todos, independentemente da capacidade física ou localização.</p>
+        <ul>
+            <li><strong>Exemplo:</strong> Legendas em tempo real em vídeos para pessoas com deficiência auditiva.</li>
+            <li><strong>Exemplo:</strong> Leitores de tela inteligentes que descrevem imagens para cegos.</li>
+            <li><strong>Acessibilidade:</strong> Projetar interfaces que todos consigam usar.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 21: Pilar 5 - Transparência -->
+    <section class="slide">
+        <h2>Pilar 5: Transparência</h2>
+        <p>Os usuários devem saber que estão interagindo com uma IA e como ela toma decisões.</p>
+        <ul>
+            <li><strong>Explicabilidade:</strong> Se um empréstimo foi negado pela IA, o banco deve explicar **por que** (Ex: "Renda insuficiente" e não apenas "O robô disse não").</li>
+            <li><strong>Divulgação:</strong> Chats devem informar: "Olá, eu sou um assistente virtual".</li>
+        </ul>
+    </section>
+
+    <!-- Slide 22: Pilar 6 - Responsabilidade (Accountability) -->
+    <section class="slide">
+        <h2>Pilar 6: Responsabilidade (Accountability)</h2>
+        <p>Seres humanos devem ser responsáveis pelas ações dos sistemas de IA.</p>
+        <ul>
+            <li><strong>Governança:</strong> Deve haver mecanismos para intervir ou anular decisões da IA.</li>
+            <li><strong>Responsabilidade Legal:</strong> Se a IA cometer um erro grave, quem responde por isso? A empresa e os desenvolvedores devem ter diretrizes claras.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 23: Tabela Resumo da Ética (Para Revisão) -->
+    <section class="slide">
+        <h2>Resumo: Os 6 Pilares da IA Responsável</h2>
+        <table style="width:100%; border-collapse: collapse; margin-top: 20px;">
+            <tr style="background-color: var(--senai-red); color: white;">
+                <th style="padding: 10px; border: 1px solid #ddd;">Pilar</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Objetivo Principal</th>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Equidade</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Sem viés ou discriminação.</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Confiabilidade</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Operação robusta e segura.</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Privacidade</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Proteção de dados pessoais.</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Inclusividade</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Acessível a todos.</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Transparência</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Decisões inteligíveis.</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Responsabilidade</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Supervisão humana final.</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- Slide 24: Cenário Real - Identificando a Carga de Trabalho -->
+    <section class="slide">
+        <h2>Cenário Real: Qual Carga de Trabalho?</h2>
+        <p>Uma empresa de logística quer identificar automaticamente endereços escritos à mão em pacotes para acelerar a entrega.</p>
+        <p><strong>Qual a carga de trabalho de IA correta?</strong></p>
+        <ol>
+            <li>Detecção de Anomalias</li>
+            <li>Visão Computacional (OCR)</li>
+            <li>Mineração de Conhecimento</li>
+            <li>Machine Learning</li>
+        </ol>
+        <div class="important-box">
+            Resposta: 2. Visão Computacional. O objetivo é ler texto a partir de uma imagem visual.
+        </div>
+    </section>
+
+    <!-- Slide 25: Cenário Real - Desafio Ético -->
+    <section class="slide">
+        <h2>Cenário Real: Desafio Ético</h2>
+        <p>Um hospital implementa um bot para triagem de pacientes, mas ele só entende comandos em Português Formal, ignorando gírias regionais e sotaques.</p>
+        <p><strong>Qual princípio da IA Responsável está sendo violado?</strong></p>
+        <ul>
+            <li>A) Equidade</li>
+            <li>B) Inclusividade</li>
+            <li>C) Transparência</li>
+            <li>D) Confiabilidade</li>
+        </ul>
+        <div class="important-box">
+            Resposta: B. Inclusividade. O sistema não está atendendo a todos os perfis de usuários de forma igualitária.
+        </div>
+    </section>
+
+    <!-- Slide 26: Erros Comuns: Alucinação -->
+    <section class="slide">
+        <h2>Erros Comuns: Alucinação da IA</h2>
+        <p>O que é "Alucinação"?</p>
+        <ul>
+            <li>É quando a IA (geralmente generativa) gera uma resposta que parece confiante, mas é factualmente **falsa**.</li>
+            <li><strong>Causa:</strong> Falta de dados ou excesso de "criatividade" do modelo.</li>
+            <li><strong>Como evitar:</strong> Grounding (fundamentação em dados reais) e revisão humana.</li>
+        </ul>
+        <div class="important-box">Isso fere o pilar da Confiabilidade!</div>
+    </section>
+
+    <!-- Slide 27: Boas Práticas na Implementação -->
+    <section class="slide">
+        <h2>Boas Práticas na Jornada de IA</h2>
+        <ul>
+            <li><strong>Comece pelo Problema:</strong> Não use IA "porque é moda". Identifique o valor de negócio primeiro.</li>
+            <li><strong>Dados de Qualidade:</strong> Se os dados forem ruins, a IA será ruim.</li>
+            <li><strong>Equipes Diversas:</strong> Pessoas com diferentes origens, experiências e pontos de vista conseguem identificar vieses e limitações que um grupo homogêneo dificilmente perceberia.</li>
+            <li><strong>Monitoramento Contínuo:</strong> A IA pode "degradar" com o tempo conforme o mundo muda.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 28: Introdução ao Azure AI Foundry -->
+    <section class="slide">
+        <h2>Azure AI Foundry (Antigo AI Studio)</h2>
+        <p>O portal centralizado para desenvolvedores de IA.</p>
+        <ul>
+            <li><strong>Catálogo de Modelos:</strong> Explore modelos da OpenAI, Meta (Llama), Mistral e Microsoft.</li>
+            <li><strong>Playgrounds:</strong> Teste prompts de texto e imagem sem escrever uma linha de código.</li>
+            <li><strong>Gestão:</strong> Controle chaves, custos e segurança em um só lugar.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 29: Navegando no Portal do Azure -->
+    <section class="slide">
+        <h2>Dicas de Navegação no Portal Azure</h2>
+        <ul>
+            <li><strong>Grupos de Recursos:</strong> A "pasta" onde você guarda seus serviços. Apague a pasta para apagar todos os custos.</li>
+            <li><strong>Azure AI Services:</strong> O serviço "guarda-chuva" que inclui Vision, Language e Speech.</li>
+            <li><strong>Chaves e Endpoints:</strong> As "credenciais" que sua aplicação usa para falar com a IA. Nunca as exponha publicamente!</li>
+        </ul>
+    </section>
+
+    <!-- Slide 32: Preparação para o Mercado -->
+    <section class="slide">
+        <h2>Como se tornar um profissional de IA?</h2>
+        <ul>
+            <li><strong>Conhecimento Teórico:</strong> Esta certificação AI-900.</li>
+            <li><strong>Prática:</strong> Build 2026, Microsoft Learn e labs do GitHub.</li>
+            <li><strong>Ética:</strong> Compreender o impacto social da tecnologia.</li>
+            <li><strong>Curiosidade:</strong> A área muda toda semana.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 33: Mitos da IA -->
+    <section class="slide">
+        <h2>Mitos vs. Realidade</h2>
+        <ul>
+            <li><strong>Mito:</strong> IA vai substituir todos os humanos amanhã.</li>
+            <li><strong>Realidade:</strong> IA vai substituir quem **não souber** usar IA.</li>
+            <li><strong>Mito:</strong> IA "entende" o mundo como nós.</li>
+            <li><strong>Realidade:</strong> IA é matemática avançada prevendo padrões.</li>
+            <li><strong>Mito:</strong> É muito caro para pequenas empresas.</li>
+            <li><strong>Realidade:</strong> A nuvem permite pagar apenas centavos por uso.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 34: Segurança Cibernética e IA -->
+    <section class="slide">
+        <h2>Segurança Cibernética e IA</h2>
+        <p>Uma faca de dois gumes:</p>
+        <ul>
+            <li><strong>Defesa:</strong> IA detectando ataques em milissegundos.</li>
+            <li><strong>Ataque:</strong> Hackers usando IA para criar e-mails de phishing perfeitos.</li>
+            <li><strong>Deepfakes:</strong> Vídeos falsos que parecem reais. O pilar da Transparência exige marcas d'água nestes conteúdos.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 35: IA e o Futuro do Trabalho no Brasil -->
+    <section class="slide">
+        <h2>IA no Brasil e Indústria 4.0</h2>
+        <ul>
+            <li>O Brasil é um grande adotante de IA no setor bancário e agrícola.</li>
+            <li>Agronegócio usando drones com visão computacional para detectar pragas.</li>
+            <li>Indústria automotiva automatizando montagem com robôs inteligentes.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <h2>Conclusão do Dia 01</h2>
+        <p>Hoje estabelecemos o alicerce. Entendemos que IA não é mágica, é uma ferramenta poderosa que exige **ética** e **estratégia**.</p>
+        <p>Amanhã mergulharemos no motor da IA: o **Machine Learning**.</p>
+    </section>
+
+</div>
+
+<footer>
+    <div class="slide-number">Slide <span id="current-slide-num">1</span> de <span id="total-slides-num">41</span></div>
+    <div class="nav-buttons">
+        <button id="prev-btn" disabled>Anterior</button>
+        <button id="next-btn">Próximo</button>
+    </div>
+    <span>SENAI — Material Didático</span>
+</footer>
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const currentSlideNumDisplay = document.getElementById('current-slide-num');
+    const totalSlidesNumDisplay = document.getElementById('total-slides-num');
+    
+    let currentSlideIndex = 0;
+    const totalSlides = slides.length;
+    totalSlidesNumDisplay.innerText = totalSlides;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            if (i === index) {
+                slide.classList.add('active');
+            }
+        });
+        currentSlideIndex = index;
+        currentSlideNumDisplay.innerText = index + 1;
+        
+        // Atualiza estado dos botões
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === totalSlides - 1;
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (currentSlideIndex < totalSlides - 1) {
+            showSlide(currentSlideIndex + 1);
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentSlideIndex > 0) {
+            showSlide(currentSlideIndex - 1);
+        }
+    });
+
+    // Navegação por teclado
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextBtn.click();
+        if (e.key === 'ArrowLeft') prevBtn.click();
+    });
+</script>
+
+</body>
+</html>

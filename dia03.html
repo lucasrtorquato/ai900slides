@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-900 - IA Gen</title>
+
+<style>
+:root {
+--senai-red:#E30613;
+--azure-purple:#5c2d91;
+--openai-green:#10a37f;
+--bg:#F4F4F4;
+}
+
+body{
+font-family:Segoe UI;
+margin:0;
+background:var(--bg);
+overflow:hidden;
+font-size:22px;
+}
+
+header{
+background:linear-gradient(90deg,var(--azure-purple),var(--senai-red));
+color:#fff;
+padding:15px 40px;
+position:fixed;
+width:100%;
+top:0;
+font-size:22px;
+}
+
+#slide-container{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding-top:70px;
+}
+
+.slide{
+display:none;
+width:90%;
+height:80%;
+background:#fff;
+padding:50px;
+border-radius:10px;
+overflow:auto;
+}
+
+.slide.active{
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+}
+
+h2{
+font-size:40px;
+color:var(--azure-purple);
+border-bottom:4px solid var(--openai-green);
+margin-bottom:20px;
+}
+
+p{
+font-size:24px;
+line-height:1.5;
+}
+
+ul{
+font-size:24px;
+line-height:1.6;
+}
+
+pre{
+font-size:22px;
+background:#eee;
+padding:15px;
+}
+
+.important-box{
+background:#f5f0ff;
+border-left:10px solid var(--azure-purple);
+padding:20px;
+margin-top:25px;
+font-size:22px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+AI-900 - IA Generativa 
+</header>
+
+<div id="slide-container">
+
+<!-- CAPA -->
+<section class="slide active">
+<h2>IA Generativa na Prática</h2>
+<p>Hoje o foco não é só entender… é usar IA de verdade.</p>
+<p>Você vai sair daqui criando soluções com IA.</p>
+
+<p><b>Objetivo do dia:</b></p>
+<ul>
+<li>Entender como a IA funciona</li>
+<li>Aprender a se comunicar com IA</li>
+<li>Criar algo real com IA</li>
+</ul>
+</section>
+
+<!-- ML -->
+<section class="slide">
+<h2>Revisão: Machine Learning</h2>
+
+<p>Machine Learning é quando treinamos um modelo com dados para encontrar padrões.</p>
+
+<p><b>Fluxo básico:</b></p>
+<ul>
+<li>Você fornece dados</li>
+<li>O modelo aprende padrões</li>
+<li>Ele faz previsões</li>
+</ul>
+
+<p><b>Importante:</b></p>
+<p>O modelo não entende… ele aprende padrões matemáticos.</p>
+
+<p><b>Pergunta para vocês:</b></p>
+<p>Ele aprende ou apenas reconhece padrões?</p>
+
+<div class="important-box">
+ATIVIDADE (10 min):
+
+Abrir Teachable Machine
+
+Testar modelo da aula passada
+
+Pergunta:
+Ele entende ou só identifica padrões?
+</div>
+</section>
+
+<!-- TRANSIÇÃO -->
+<section class="slide">
+<h2>Mudança de Paradigma</h2>
+
+<p>Antes da IA generativa:</p>
+<ul>
+<li>Classificava dados</li>
+<li>Fazia previsões</li>
+</ul>
+
+<p>Agora com IA generativa:</p>
+<ul>
+<li>Cria texto</li>
+<li>Cria imagens</li>
+<li>Cria código</li>
+</ul>
+
+<p><b>Resumo importante:</b></p>
+<p>Machine Learning analisa dados</p>
+<p>IA Generativa cria conteúdo</p>
+
+<div class="important-box">
+ATIVIDADE:
+
+Abra o ChatGPT
+
+Peça algo útil para seu dia a dia
+
+Exemplo:
+- resumo
+- explicação
+- ideia
+
+Compartilhe com a turma
+</div>
+</section>
+
+<!-- LLM -->
+<section class="slide">
+<h2>LLMs (Modelos de Linguagem)</h2>
+
+<p>LLMs são modelos treinados com enormes volumes de texto.</p>
+
+<p><b>Como eles funcionam:</b></p>
+<p>Eles preveem qual é a próxima palavra mais provável.</p>
+
+<p><b>Exemplo:</b></p>
+<p>"O céu é..." → azul</p>
+
+<p><b>Importante:</b></p>
+<p>Ele não sabe o que é o céu… ele só prevê.</p>
+
+<div class="important-box">
+ATIVIDADE:
+
+Testar no ChatGPT:
+
+1. Pergunta confusa  
+2. Pergunta difícil  
+3. Informação errada  
+
+Refletir:
+Ele erra?  
+Ele parece confiante?
+</div>
+</section>
+
+<!-- TOKENS -->
+<section class="slide">
+<h2>Tokens</h2>
+
+<p>O modelo não lê palavras inteiras.</p>
+
+<p>Ele divide o texto em pedaços chamados tokens.</p>
+
+<p><b>Por que isso importa?</b></p>
+<ul>
+<li>Cada token tem custo</li>
+<li>Existe limite de tokens</li>
+<li>Respostas grandes consomem mais</li>
+</ul>
+
+<p><b>Pergunta:</b></p>
+<p>Por que respostas maiores custam mais?</p>
+</section>
+
+<!-- TRANSFORMER -->
+<section class="slide">
+<h2>Transformer</h2>
+
+<p>É a arquitetura que permite que a IA funcione tão bem.</p>
+
+<p>Antes:</p>
+<ul>
+<li>Modelos liam palavra por palavra</li>
+</ul>
+
+<p>Agora:</p>
+<ul>
+<li>Lê tudo ao mesmo tempo</li>
+<li>Entende contexto completo</li>
+</ul>
+
+<p><b>Resultado:</b></p>
+<p>Mais rapidez + mais precisão</p>
+</section>
+
+<!-- ATENÇÃO -->
+<section class="slide">
+<h2>Mecanismo de Atenção</h2>
+
+<p>Permite que o modelo foque nas partes importantes da frase.</p>
+
+<p><b>Exemplo:</b></p>
+<p>"O aluno estudou porque ele queria passar"</p>
+
+<p>A IA entende que "ele" = aluno</p>
+
+<p><b>Isso é o que dá contexto para a IA.</b></p>
+</section>
+
+<!-- PROMPT -->
+<section class="slide">
+<h2>Engenharia de Prompt</h2>
+
+<p>Prompt é como você conversa com a IA.</p>
+
+<p><b>Estrutura ideal:</b></p>
+<pre>
+Contexto
+Tarefa
+Formato
+Restrições
+</pre>
+
+<p><b>Regra principal:</b></p>
+<p>Quanto mais claro você for, melhor será a resposta.</p>
+
+<div class="important-box">
+ATIVIDADE:
+
+Prompt ruim:
+"Explique IA"
+
+Melhorar usando:
+- contexto
+- objetivo
+- formato
+
+Comparar resultados
+</div>
+</section>
+
+<!-- TECNICAS -->
+<section class="slide">
+<h2>Técnicas de Prompt</h2>
+
+<ul>
+<li>Zero-shot → sem exemplo - ex: "Classifique este sentimento: 'Estou muito feliz hoje"</li>
+<li>Few-shot → com exemplo - ex: Classifique os sentimentos: estou triste = negativo. hoje foi incrível = positivo. Agora classifique "estou muito feliz hoje"</li>
+<li>Role prompt → dar papel para IA. ex: você é um professor de ensino médio. Explque o que é IA.</li>
+</ul>
+
+<!-- <p><b>Exemplo:</b></p>
+<p>"Você é um professor..."</p> -->
+
+<p><b>Importante:</b></p>
+<p>Você está ensinando a IA como responder.</p>
+
+<div class="important-box">
+ATIVIDADE:
+
+Criar um assistente:
+
+- RH  
+- Marketing  
+- Atendimento  
+
+Entregar:
+Prompt + resultado
+</div>
+</section>
+
+<!-- TEMP -->
+<section class="slide">
+<h2>Temperatura</h2>
+
+<p>Controla o nível de criatividade da IA.</p>
+
+<ul>
+<li>Baixa → resposta mais precisa</li>
+<li>Alta → resposta mais criativa</li>
+</ul>
+
+<p><b>Uso:</b></p>
+<ul>
+<li>Relatórios → baixa</li>
+<li>Ideias → alta</li>
+</ul>
+</section>
+
+<!-- TOP P -->
+<section class="slide">
+<h2>Top-P</h2>
+
+<p>Controla a variedade das palavras escolhidas.</p>
+
+<p><b>Diferença:</b></p>
+<ul>
+<li>Temperatura → aleatoriedade</li>
+<li>Top-P → diversidade</li>
+</ul>
+</section>
+
+<!-- ALUCINACAO -->
+<section class="slide">
+<h2>Alucinação</h2>
+
+<p>A IA pode inventar respostas incorretas.</p>
+
+<p><b>Problema:</b></p>
+<ul>
+<li>Parece confiável</li>
+<li>Nem sempre está certa</li>
+</ul>
+
+<p><b>Regra:</b></p>
+<p>Sempre validar informação importante</p>
+</section>
+
+<!-- RAG -->
+<section class="slide">
+<h2>RAG (Geração aumentada por recuperação)</h2>
+
+<p>Combina IA com dados reais.</p>
+
+<p><b>Como funciona:</b></p>
+<ul>
+<li>Busca dados</li>
+<li>Envia para IA</li>
+<li>IA responde com base nisso</li>
+</ul>
+
+<div class="important-box">
+ATIVIDADE:
+
+Criar ideia de chatbot:
+
+- Empresa  
+- Dados  
+- Usuário  
+- Resposta  
+</div>
+</section>
+
+<!-- AZURE -->
+<section class="slide">
+<h2>Azure AI Foundry</h2>
+
+<p>Ambiente profissional para usar IA.</p>
+
+<ul>
+<li>Modelos prontos</li>
+<li>Testes</li>
+<li>APIs</li>
+</ul>
+
+<p><b>Agora vocês vão usar IA real.</b></p>
+
+<div class="important-box">
+ATIVIDADE:
+
+Criar solução:
+
+- Problema  
+- Usuário  
+- Prompt  
+- Fluxo  
+
+Testar no Azure
+</div>
+</section>
+
+<!-- AGENTES -->
+<section class="slide">
+<h2>Agentes de IA</h2>
+
+<p>São sistemas que usam IA para executar tarefas em etapas.</p>
+
+<p><b>Diferença:</b></p>
+<ul>
+<li>Prompt → resposta única</li>
+<li>Agente → fluxo contínuo</li>
+</ul>
+
+<p>Exemplo: assistente de vendas</p>
+</section>
+
+<!-- FINAL -->
+<section class="slide">
+<h2>Projeto</h2>
+
+<div class="important-box">
+Criar uma solução com IA:
+
+- Nome da empresa  
+- Problema  
+- Solução  
+- Prompt  
+- Demonstração  
+
+Extra:
+Landing page
+</div>
+
+<p>Vamos usar tudo que aprendendemos hoje.</p>
+</section>
+
+<!-- ENCERRAMENTO -->
+<section class="slide">
+<h2>Encerramento</h2>
+
+<p>Quem sabe usar IA produz mais.</p>
+
+<p><b>Pergunta final:</b></p>
+<p>Quem vai ser substituído: quem usa IA ou quem não usa?</p>
+</section>
+
+</div>
+
+<script>
+let slides=document.querySelectorAll('.slide');
+let i=0;
+
+function show(n){
+slides.forEach(s=>s.classList.remove('active'));
+slides[n].classList.add('active');
+}
+
+document.addEventListener('keydown',e=>{
+if(e.key==='ArrowRight'){
+i=Math.min(i+1,slides.length-1);
+show(i);
+}
+if(e.key==='ArrowLeft'){
+i=Math.max(i-1,0);
+show(i);
+}
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-900 - Dia 02 - Machine Learning Profundo</title>
+    <style>
+ 
+        :root {
+            --senai-red: #E30613;
+            --senai-gray: #333333;
+            --senai-light-gray: #F4F4F4;
+            --senai-white: #FFFFFF;
+            --code-bg: #282c34;
+            --tech-blue: #0078D4; /* Azul Azure para destaque técnico */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--senai-light-gray);
+            color: var(--senai-gray);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--senai-red);
+            color: var(--senai-white);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        header h1 { margin: 0; font-size: 1.2rem; text-transform: uppercase; }
+
+        #slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 50px;
+        }
+
+        .slide {
+            display: none;
+            width: 85%;
+            height: 75%;
+            background: var(--senai-white);
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            position: relative;
+            animation: fadeIn 0.5s ease;
+            overflow-y: auto; /* Permite scroll se o conteúdo for longo */
+        }
+
+        .slide.active { display: flex; flex-direction: column; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--senai-red);
+            border-bottom: 3px solid var(--senai-red);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 2.2rem;
+        }
+
+        p, li { font-size: 1.3rem; line-height: 1.6; }
+        ul { margin-top: 20px; }
+        li { margin-bottom: 15px; }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: var(--senai-white);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            z-index: 1000;
+        }
+
+        .nav-buttons button {
+            background-color: var(--senai-red);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 10px;
+            transition: opacity 0.3s;
+        }
+        .nav-buttons button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .nav-buttons button:hover:not(:disabled) { opacity: 0.8; }
+
+        /* Caixas de Conteúdo */
+        .important-box {
+            background-color: #fff3f3;
+            border-left: 10px solid var(--senai-red);
+            padding: 20px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        .example-box {
+            background-color: #eef2f7;
+            border-left: 10px solid #2c3e50;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .math-box {
+            background-color: var(--code-bg);
+            color: #61dafb;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            text-align: center;
+            font-size: 1.5rem;
+            margin: 20px 0;
+        }
+
+        /* Capa */
+        .capa {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--senai-red) 0%, #b3050f 100%);
+            color: white;
+        }
+        .capa h1 { font-size: 4rem; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .capa h2 { color: white; border: none; font-size: 1.8rem; margin-top: 20px; }
+
+        /* Diagramas CSS Avançados */
+        .diagram-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+
+        .step {
+            background: white;
+            border: 2px solid var(--senai-gray);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            width: 150px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .arrow { font-size: 2rem; color: var(--senai-red); }
+
+        /* Gráfico de Dispersão Simplificado (CSS) */
+        .scatter-plot {
+            width: 300px;
+            height: 200px;
+            border-left: 2px solid black;
+            border-bottom: 2px solid black;
+            position: relative;
+            margin: 20px auto;
+            background: white;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--senai-red);
+            border-radius: 50%;
+            position: absolute;
+        }
+        .line {
+            position: absolute;
+            height: 2px;
+            background: var(--tech-blue);
+            width: 100%;
+            transform-origin: bottom left;
+        }
+
+        /* Matriz de Confusão */
+        .confusion-matrix {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        .confusion-matrix th, .confusion-matrix td {
+            border: 1px solid #ddd;
+            padding: 15px;
+        }
+        .confusion-matrix th { background-color: var(--senai-gray); color: white; }
+        .bg-green { background-color: #d4edda; color: #155724; }
+        .bg-red { background-color: #f8d7da; color: #721c24; }
+
+        .slide-number {
+            font-weight: bold;
+            color: var(--senai-gray);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>AI-900: Fundamentos de IA no Microsoft Azure</h1>
+    <span>Dia 02: Machine Learning Profundo</span>
+</header>
+
+<div id="slide-container">
+
+    <!-- Slide 1: Capa -->
+    <section class="slide active capa">
+        <h1>AI-900</h1>
+        <h2>Dia 02: Desvendando o Machine Learning</h2>
+        <p>Da matemática básica aos pipelines automatizados no Azure.</p>
+    </section>
+
+    <!-- Slide 2: Agenda Detalhada -->
+    <section class="slide">
+        <h2>Agenda do Dia</h2>
+        <ul>
+            <li><strong>Fundamentos:</strong> O que realmente significa "aprender"?</li>
+            <li><strong>Matemática Essencial:</strong> Features, Labels e Algoritmos.</li>
+            <li><strong>O Processo de Ciência de Dados:</strong> Treino, Validação e Teste.</li>
+            <li><strong>Mergulho em Regressão:</strong> Linearidade e Métricas de Erro.</li>
+            <li><strong>Mergulho em Classificação:</strong> Binária, Multiclasse e Matriz de Confusão.</li>
+            <li><strong>Mergulho em Clustering:</strong> Agrupamento K-Means.</li>
+            <li><strong>Azure Machine Learning Studio:</strong> Automated ML e Designer.</li>
+            <li><strong>MLOps:</strong> Endpoints e Inferência.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 3: Programação Tradicional vs ML -->
+    <section class="slide">
+        <h2>Paradigma: Tradicional vs Machine Learning</h2>
+        <p>Para entender ML, precisamos entender o que ele substitui.</p>
+        <div class="diagram-container">
+            <div style="text-align:center">
+                <h3>Tradicional</h3>
+                <div class="step">Regras + Dados</div>
+                <div class="arrow">⬇️</div>
+                <div class="step">Respostas</div>
+                <p><i>Você escreve os IFs e ELSEs.</i></p>
+            </div>
+            <div style="border-left: 2px dashed #ccc; margin: 0 20px;"></div>
+            <div style="text-align:center">
+                <h3>Machine Learning</h3>
+                <div class="step">Dados + Respostas</div>
+                <div class="arrow">⬇️</div>
+                <div class="step">Regras (Modelo)</div>
+                <p><i>A máquina descobre os IFs.</i></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 4: A Anatomia dos Dados -->
+    <section class="slide">
+        <h2>A Anatomia de um Dataset</h2>
+        <p>Todo modelo de ML começa com uma tabela. Vamos dar nomes técnicos às colunas.</p>
+        <table style="width:100%; border-collapse: collapse; font-size: 1.1rem;">
+            <tr style="background-color: #2c3e50; color: white;">
+                <th>Metragem (m²)</th>
+                <th>Quartos</th>
+                <th>Bairro</th>
+                <th style="background-color: var(--senai-red);">Preço (R$)</th>
+            </tr>
+            <tr>
+                <td>80</td>
+                <td>2</td>
+                <td>Centro</td>
+                <td>350.000</td>
+            </tr>
+            <tr>
+                <td>120</td>
+                <td>3</td>
+                <td>Jardins</td>
+                <td>800.000</td>
+            </tr>
+        </table>
+        <div class="math-box">Y = f(X)</div>
+        <ul>
+            <li><strong>X (Features/Recursos):</strong> As colunas azuis (Metragem, Quartos, Bairro). São as variáveis independentes.</li>
+            <li><strong>Y (Label/Rótulo):</strong> A coluna vermelha (Preço). É a variável dependente, o que queremos prever.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 5: Tipos de Aprendizado -->
+    <section class="slide">
+        <h2>As 3 Grandes Categorias de Aprendizado</h2>
+        <p>Dependendo se temos o <strong>Y (Label)</strong> ou não, o tipo de aprendizado muda.</p>
+        <ol>
+            <li><strong>Aprendizado Supervisionado:</strong> Nós temos o Gabarito (Label).
+                <ul>
+                    <li><i>Ex: Regressão e Classificação.</i></li>
+                </ul>
+            </li>
+            <li><strong>Aprendizado Não Supervisionado:</strong> Não temos o Gabarito. A máquina deve achar estrutura sozinha.
+                <ul>
+                    <li><i>Ex: Clustering (Agrupamento).</i></li>
+                </ul>
+            </li>
+            <li><strong>Aprendizado por Reforço:</strong> A máquina aprende por tentativa e erro (recompensa/punição).
+                <ul>
+                    <li><i>Ex: Robô aprendendo a andar ou jogar Xadrez.</i></li>
+                </ul>
+            </li>
+        </ol>
+    </section>
+
+    <!-- Slide 6: O Processo de Treinamento -->
+    <section class="slide">
+        <h2>O Ciclo de Vida: Treino e Teste</h2>
+        <p>Jamais treinamos o modelo com 100% dos dados. Por que?</p>
+        <div class="important-box">
+            <strong>Analogia:</strong> Se o professor der as mesmas perguntas da aula na prova, o aluno apenas memoriza, não aprende. Isso se chama <strong>Overfitting</strong>.
+        </div>
+        <div class="diagram-container">
+            <div class="step" style="background:#d4edda; width: 60%;">Dados de Treino (70%)<br><i>Para a máquina estudar</i></div>
+            <div class="step" style="background:#f8d7da; width: 30%;">Dados de Teste (30%)<br><i>Para a prova final</i></div>
+        </div>
+        <p>O Azure ML faz essa divisão (Split) automaticamente na maioria dos casos.</p>
+    </section>
+
+    <!-- Slide 7: Regressão (Aprofundamento) -->
+    <section class="slide">
+        <h2>1. Regressão</h2>
+        <p>O objetivo é prever um <strong>valor numérico contínuo</strong>.</p>
+        <div class="scatter-plot">
+            <div class="dot" style="bottom: 20%; left: 10%;"></div>
+            <div class="dot" style="bottom: 30%; left: 20%;"></div>
+            <div class="dot" style="bottom: 50%; left: 40%;"></div>
+            <div class="dot" style="bottom: 60%; left: 60%;"></div>
+            <div class="dot" style="bottom: 80%; left: 80%;"></div>
+            <!-- Linha de Regressão -->
+            <div class="line" style="bottom: 15%; left: 0; transform: rotate(-25deg); width: 110%; background:rgba(0,0,255,0.3);"></div>
+            <div class="line" style="bottom: 15%; left: 0; transform: rotate(-35deg); width: 110%;"></div>
+        </div>
+        <p style="text-align:center; font-size:1rem;">O algoritmo tenta traçar a linha que passa mais perto de todos os pontos.</p>
+        <ul>
+            <li><strong>Algoritmos comuns:</strong> Regressão Linear, Árvore de Decisão, Random Forest.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 8: Métricas de Regressão (Essencial para Prova) -->
+    <section class="slide">
+        <h2>Avaliando a Regressão: O Erro</h2>
+        <p>Como sabemos se a linha está boa? Medimos a distância dos pontos até a linha.</p>
+        <ul>
+            <li><strong>MAE (Mean Absolute Error):</strong> A média simples dos erros.
+                <br><i>"Errei o preço das casas em média por R$ 5.000."</i></li>
+            <li><strong>RMSE (Root Mean Squared Error):</strong> Média quadrática.
+                <br><i>Penaliza erros grandes. Se errar feio em uma casa, o RMSE sobe muito.</i></li>
+            <li><strong>R² (R-Squared):</strong> Coeficiente de Determinação (0 a 1).
+                <br><i>Quanto mais perto de 1, melhor o modelo explica os dados.</i></li>
+        </ul>
+        <div class="important-box">Para a prova: Menor MAE/RMSE é bom. Maior R² é bom.</div>
+    </section>
+
+    <!-- Slide 9: Classificação Binária -->
+    <section class="slide">
+        <h2>2. Classificação Binária</h2>
+        <p>Prevê uma entre <strong>duas categorias</strong> mutuamente exclusivas.</p>
+        <ul>
+            <li>É Spam ou Não é?</li>
+            <li>O paciente tem Diabetes ou Não?</li>
+            <li>A transação é Fraude ou Legítima?</li>
+        </ul>
+        <p>O algoritmo calcula uma <strong>Probabilidade</strong> (entre 0 e 1). Se for > 0.5, é Classe A. Se < 0.5, é Classe B.</p>
+        <div class="example-box">
+            <strong>Algoritmo Famoso:</strong> Regressão Logística (apesar do nome "regressão", é usado para classificação).
+        </div>
+    </section>
+
+    <!-- Slide 10: Matriz de Confusão -->
+    <section class="slide">
+        <h2>A Matriz de Confusão</h2>
+        <p>Acurácia não é tudo! Precisamos ver onde o modelo errou.</p>
+        <table class="confusion-matrix">
+            <tr>
+                <th></th>
+                <th>Previ: SIM</th>
+                <th>Previ: NÃO</th>
+            </tr>
+            <tr>
+                <th>Real: SIM</th>
+                <td class="bg-green"><strong>Verdadeiro Positivo (TP)</strong><br>Acertei!</td>
+                <td class="bg-red"><strong>Falso Negativo (FN)</strong><br>Errei (Perigo!)</td>
+            </tr>
+            <tr>
+                <th>Real: NÃO</th>
+                <td class="bg-red"><strong>Falso Positivo (FP)</strong><br>Alarme Falso</td>
+                <td class="bg-green"><strong>Verdadeiro Negativo (TN)</strong><br>Acertei!</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- Slide 11: Precisão vs Recall (O Dilema) -->
+    <section class="slide">
+        <h2>Precisão vs. Recall (Revocação)</h2>
+        <p>Dependendo do negócio, escolhemos o que priorizar.</p>
+        <ul>
+            <li><strong>Precisão:</strong> De todos que eu chamei de "Doentes", quantos realmente eram?
+                <br><i>Meta: Não assustar pacientes saudáveis (Evitar Falso Positivo).</i>
+            </li>
+            <li><strong>Recall:</strong> De todos os "Doentes" que existem, quantos eu encontrei?
+                <br><i>Meta: Não deixar ninguém morrer sem tratamento (Evitar Falso Negativo).</i>
+            </li>
+        </ul>
+        <div class="important-box">
+            Em saúde e segurança, geralmente priorizamos o <strong>Recall</strong>. Em filtros de spam, priorizamos a <strong>Precisão</strong>.
+        </div>
+    </section>
+
+    <!-- Slide 12: Classificação Multiclasse -->
+    <section class="slide">
+        <h2>3. Classificação Multiclasse</h2>
+        <p>Quando temos mais de duas opções possíveis.</p>
+        <ul>
+            <li>Classificar gêneros de filmes: <i>Ação, Comédia, Terror, Drama.</i></li>
+            <li>Classificar sentimentos: <i>Feliz, Triste, Raiva, Neutro.</i></li>
+        </ul>
+        <p>O modelo gera uma probabilidade para cada classe e escolhe a maior.</p>
+        <div class="code-block">
+            Ação: 0.10<br>
+            Comédia: 0.85 (Vencedor)<br>
+            Terror: 0.05
+        </div>
+    </section>
+
+    <!-- Slide 13: Clustering (K-Means) -->
+    <section class="slide">
+        <h2>4. Clustering (Agrupamento)</h2>
+        <p>Aprendizado Não Supervisionado. O algoritmo organiza a bagunça.</p>
+        <p><strong>Algoritmo K-Means:</strong></p>
+        <ol>
+            <li>Você define <strong>K</strong> (número de grupos, ex: 3).</li>
+            <li>O algoritmo coloca 3 pontos aleatórios (centróides).</li>
+            <li>Cada dado se junta ao centróide mais próximo.</li>
+            <li>O centróide se move para o centro do grupo.</li>
+            <li>Repete até estabilizar.</li>
+        </ol>
+        <div class="example-box">
+            <strong>Uso:</strong> Segmentação de mercado. "Descubra quais são os tipos de clientes que tenho".
+        </div>
+    </section>
+
+    <!-- Slide 14: Deep Learning (Intro) -->
+    <section class="slide">
+        <h2>Deep Learning: O que muda?</h2>
+        <p>Enquanto o ML clássico (Regressão/K-Means) é bom para planilhas, ele falha com dados complexos como Imagens e Áudio.</p>
+        <ul>
+            <li><strong>Redes Neurais Artificiais (ANN):</strong> Inspiradas nos neurônios biológicos.</li>
+            <li><strong>Camadas (Layers):</strong> Camada de entrada -> Camadas Ocultas (Processamento) -> Camada de Saída.</li>
+            <li><strong>Deep:</strong> Significa que temos muitas camadas ocultas.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 15: Azure Machine Learning Studio -->
+    <section class="slide">
+        <h2>A Plataforma: Azure Machine Learning Studio</h2>
+        <p>O ambiente unificado para cientistas de dados.</p>
+        <ul>
+            <li><strong>Notebooks:</strong> Para quem coda em Python (SDK).</li>
+            <li><strong>Automated ML:</strong> Para quem quer rapidez (No-code).</li>
+            <li><strong>Designer:</strong> Para quem gosta de fluxogramas (Low-code).</li>
+        </ul>
+        <div class="diagram-container">
+            <div class="step">Dados</div>
+            <div class="arrow">➡️</div>
+            <div class="step">Treino (Compute)</div>
+            <div class="arrow">➡️</div>
+            <div class="step">Modelo (Registry)</div>
+            <div class="arrow">➡️</div>
+            <div class="step">Endpoint</div>
+        </div>
+    </section>
+
+    <!-- Slide 16: Automated ML (AutoML) - Detalhe -->
+    <section class="slide">
+        <h2>Aprofundando no Automated ML</h2>
+        <p>O AutoML democratiza a IA. Ele automatiza:</p>
+        <ol>
+            <li><strong>Featurization:</strong> Limpa dados, trata valores nulos, normaliza escalas.</li>
+            <li><strong>Seleção de Modelo:</strong> Testa XGBoost, Linear, Random Forest, etc.</li>
+            <li><strong>Hiperparâmetros:</strong> Ajusta a "sintonia fina" de cada modelo.</li>
+        </ol>
+        <div class="important-box">
+            <strong>Na Prova:</strong> Se o cenário pede "criar um modelo rápido com pouco conhecimento de código", a resposta é AutoML.
+        </div>
+    </section>
+
+    <!-- Slide 17: Azure ML Designer - Detalhe -->
+    <section class="slide">
+        <h2>Aprofundando no Designer</h2>
+        <p>Ferramenta visual baseada em Pipelines.</p>
+        <ul>
+            <li>Cada caixinha é um <strong>Módulo</strong>.</li>
+            <li>Você conecta a saída de um módulo (ex: "Clean Missing Data") na entrada de outro (ex: "Train Model").</li>
+            <li><strong>Split Data:</strong> Módulo obrigatório para dividir treino/teste.</li>
+            <li><strong>Evaluate Model:</strong> Módulo final para gerar métricas (Acurácia, Recall).</li>
+        </ul>
+    </section>
+
+    <!-- Slide 18: Compute Targets (Poder de Fogo) -->
+    <section class="slide">
+        <h2>Compute Targets (Onde roda?)</h2>
+        <p>Você não treina modelos no seu laptop. Você usa a nuvem.</p>
+        <ul>
+            <li><strong>Compute Instance:</strong> Uma VM única na nuvem para você desenvolver (seu PC na nuvem).</li>
+            <li><strong>Compute Cluster:</strong> Várias VMs trabalhando juntas. Escala para zero quando não usado (Economia!). Usado para treinos pesados e AutoML.</li>
+            <li><strong>Inference Clusters (AKS):</strong> Kubernetes para colocar o modelo em produção (Real-time).</li>
+        </ul>
+    </section>
+
+    <!-- Slide 19: Datastores e Datasets -->
+    <section class="slide">
+        <h2>Gerenciamento de Dados</h2>
+        <p>O Azure ML separa o armazenamento da lógica.</p>
+        <ul>
+            <li><strong>Datastore:</strong> A conexão segura com o Azure Storage (Blob, SQL). Guarda as senhas.</li>
+            <li><strong>Dataset:</strong> Uma referência aos dados versionada.
+                <br><i>Ex: "Vendas_2025_v1". Se os dados mudarem, criamos a v2.</i></li>
+        </ul>
+    </section>
+
+    <!-- Slide 20: MLOps e Deploy -->
+    <section class="slide">
+        <h2>Colocando em Produção (Deploy)</h2>
+        <p>Treinar é só metade do trabalho. O modelo precisa ser usado.</p>
+        <ul>
+            <li><strong>Real-time Endpoint:</strong> O app envia os dados e recebe a resposta na hora (Ex: Fraude no cartão).</li>
+            <li><strong>Batch Endpoint:</strong> Processa milhões de linhas de uma vez durante a madrugada (Ex: Previsão de estoque semanal).</li>
+        </ul>
+    </section>
+
+    <!-- Slide 21: Demonstração de Conceito - Regressão -->
+    <section class="slide">
+        <h2>Cenário Prático 1: Aluguel de Bicicletas</h2>
+        <p><strong>Problema:</strong> Quantas bicicletas preciso colocar na estação amanhã?</p>
+        <ul>
+            <li><strong>Features:</strong> Previsão do tempo, Feriado (Sim/Não), Dia da semana.</li>
+            <li><strong>Label:</strong> Quantidade alugada (Número).</li>
+            <li><strong>Tipo:</strong> Regressão.</li>
+            <li><strong>Métrica:</strong> RMSE (Quero errar o mínimo de bicicletas possível).</li>
+        </ul>
+    </section>
+
+    <!-- Slide 22: Demonstração de Conceito - Classificação -->
+    <section class="slide">
+        <h2>Cenário Prático 2: Diagnóstico de Diabetes</h2>
+        <p><strong>Problema:</strong> O paciente tem risco de diabetes?</p>
+        <ul>
+            <li><strong>Features:</strong> Idade, Peso, Pressão Sanguínea, Histórico Familiar.</li>
+            <li><strong>Label:</strong> 1 (Sim) ou 0 (Não).</li>
+            <li><strong>Tipo:</strong> Classificação Binária.</li>
+            <li><strong>Métrica:</strong> Recall (Não quero deixar passar nenhum doente).</li>
+        </ul>
+    </section>
+
+    <!-- Slide 23: Quiz - Identifique o Problema -->
+    <section class="slide">
+        <h2>Quiz Rápido</h2>
+        <p>Você trabalha numa fábrica de chocolates. Quer agrupar os bombons por tamanho e peso para criar caixas sortidas, mas não tem rótulos prévios.</p>
+        <p>Qual algoritmo usar?</p>
+        <ul>
+            <li>A) Regressão Linear</li>
+            <li>B) K-Means Clustering</li>
+            <li>C) Regressão Logística</li>
+            <li>D) AutoML</li>
+        </ul>
+        <div class="important-box">Resposta: B. É um problema de agrupamento sem supervisão.</div>
+    </section>
+
+    <!-- Slide 24: Quiz - Métrica Correta -->
+    <section class="slide">
+        <h2>Quiz Rápido</h2>
+        <p>Seu modelo de previsão de preços de casas tem um R² de 0.12.</p>
+        <p>Isso é bom ou ruim?</p>
+        <ul>
+            <li>A) Excelente, quanto menor melhor.</li>
+            <li>B) Ruim, R² deve ser próximo de 1.</li>
+            <li>C) Indiferente, R² é para classificação.</li>
+        </ul>
+        <div class="important-box">Resposta: B. R² perto de 0 significa que o modelo não aprendeu nada.</div>
+    </section>
+
+    <!-- Slide 25: Erros Comuns no Exame -->
+    <section class="slide">
+        <h2>Pegadinhas do Exame AI-900</h2>
+        <ul>
+            <li><strong>Confundir Classificação com Clustering:</strong> Lembre-se, Classificação TEM rótulos (classes conhecidas). Clustering NÃO TEM.</li>
+            <li><strong>Confundir Regressão com Regressão Logística:</strong> Regressão Logística é para Classificação! (Sim, o nome confunde).</li>
+            <li><strong>Esquecer do Split:</strong> Nunca avalie o modelo com os dados de treino.</li>
+        </ul>
+    </section>
+
+    <!-- Slide 26: Laboratório - AutoML -->
+    <section class="slide">
+        <h2>Laboratório Guiado: AutoML</h2>
+        <p>Vamos ao Azure Portal.</p>
+        <ol>
+            <li>Criar um Workspace do Azure ML.</li>
+            <li>Ir em "Automated ML" > "New Job".</li>
+            <li>Selecionar Dataset "Bank Marketing" (Público).</li>
+            <li>Target Column: "y" (O cliente aceitou a oferta?).</li>
+            <li>Escolher "Classification".</li>
+            <li>Rodar e esperar o melhor modelo.</li>
+        </ol>
+    </section>
+
+    <!-- Slide 27: Analisando Resultados do AutoML -->
+    <section class="slide">
+        <h2>Analisando o Resultado</h2>
+        <p>O AutoML vai gerar uma aba "Explanation".</p>
+        <ul>
+            <li><strong>Feature Importance:</strong> Quais colunas mais impactaram a decisão?
+                <br><i>Ex: "Duração da chamada" foi o fator nº 1 para o cliente aceitar o banco.</i></li>
+        </ul>
+        <p>Isso garante o pilar da <strong>Transparência</strong> e <strong>Explicabilidade</strong>.</p>
+    </section>
+
+    <!-- Slide 28: Laboratório - Designer -->
+    <section class="slide">
+        <h2>Laboratório Guiado: Designer</h2>
+        <p>Vamos construir o pipeline visualmente.</p>
+        <ol>
+            <li>Arrastar dataset "Automobile Price Data".</li>
+            <li>Arrastar módulo "Select Columns" (remover colunas inúteis).</li>
+            <li>Arrastar "Clean Missing Data" (remover linhas vazias).</li>
+            <li>Arrastar "Split Data" (70/30).</li>
+            <li>Arrastar "Linear Regression" e "Train Model".</li>
+            <li>Arrastar "Score Model" e "Evaluate Model".</li>
+        </ol>
+    </section>
+
+    <!-- Slide 29: Inferência Real-time -->
+    <section class="slide">
+        <h2>Consumindo o Modelo</h2>
+        <p>Depois de publicar o endpoint, você recebe:</p>
+        <ul>
+            <li><strong>REST Endpoint URL:</strong> https://azure-ml.../score</li>
+            <li><strong>Key/Token:</strong> Senha de acesso.</li>
+        </ul>
+        <div class="code-bg" style="padding:15px; color: white; border-radius: 8px;">
+            POST /score <br>
+            { "data": [ {"idade": 30, "salario": 5000} ] } <br>
+            <br>
+            Response: <br>
+            { "result": [ 0 ] } (Crédito Negado)
+        </div>
+    </section>
+
+    <!-- Slide 30: Conclusão do Dia 02 -->
+    <section class="slide">
+        <h2>Resumo do Dia 02</h2>
+        <ul>
+            <li>ML é achar a função f(x) = y.</li>
+            <li>Dividimos dados em Treino e Teste para evitar "decoreba" (Overfitting).</li>
+            <li>Regressão (Números) vs Classificação (Categorias) vs Clustering (Grupos).</li>
+            <li>Métricas são vitais: Acurácia pode mentir, use Matriz de Confusão.</li>
+            <li>Azure oferece ferramentas para todos os níveis: AutoML e Designer.</li>
+        </ul>
+        <p>Amanhã entraremos no mundo revolucionário da <strong>IA Generativa</strong>.</p>
+    </section>
+
+</div>
+
+<footer>
+    <div class="slide-number">Slide <span id="current-slide-num">1</span> de <span id="total-slides-num">30</span></div>
+    <div class="nav-buttons">
+        <button id="prev-btn" disabled>Anterior</button>
+        <button id="next-btn">Próximo</button>
+    </div>
+    <span>SENAI — Material Didático</span>
+</footer>
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const currentSlideNumDisplay = document.getElementById('current-slide-num');
+    const totalSlidesNumDisplay = document.getElementById('total-slides-num');
+    
+    let currentSlideIndex = 0;
+    const totalSlides = slides.length;
+    totalSlidesNumDisplay.innerText = totalSlides;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            if (i === index) slide.classList.add('active');
+        });
+        currentSlideIndex = index;
+        currentSlideNumDisplay.innerText = index + 1;
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === totalSlides - 1;
+    }
+
+    nextBtn.addEventListener('click', () => { if (currentSlideIndex < totalSlides - 1) showSlide(currentSlideIndex + 1); });
+    prevBtn.addEventListener('click', () => { if (currentSlideIndex > 0) showSlide(currentSlideIndex - 1); });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextBtn.click();
+        if (e.key === 'ArrowLeft') prevBtn.click();
+    });
+</script>
+
+</body>
+</html>
