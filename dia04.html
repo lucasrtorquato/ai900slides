@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-900 - Dia 04 - PLN e Fala</title>
+    <style>
+        :root {
+            --senai-red: #E30613;
+            --senai-gray: #333333;
+            --senai-light-gray: #F4F4F4;
+            --senai-white: #FFFFFF;
+            --code-bg: #282c34;
+            --nlp-teal: #008080;
+            --speech-orange: #f35b1c;
+            --highlight-yellow: #fef9c3;
+            --highlight-yellow-border: #f59e0b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--senai-light-gray);
+            color: var(--senai-gray);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--nlp-teal);
+            color: var(--senai-white);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        header h1 { margin: 0; font-size: 1.2rem; text-transform: uppercase; }
+
+        #slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 50px;
+            box-sizing: border-box;
+        }
+
+        .slide {
+            display: none;
+            width: 85%;
+            height: 75%;
+            background: var(--senai-white);
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            position: relative;
+            animation: fadeIn 0.4s ease;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .slide.active { display: flex; flex-direction: column; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--nlp-teal);
+            border-bottom: 3px solid var(--speech-orange);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 2rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .label-nlp { background: #e6fffa; color: var(--nlp-teal); border: 1px solid var(--nlp-teal); }
+        .label-speech { background: #fff4f0; color: var(--speech-orange); border: 1px solid var(--speech-orange); }
+        .label-lab { background: #f0f4ff; color: #3b5bdb; border: 1px solid #3b5bdb; }
+        .label-quiz { background: #fff0f6; color: #c2185b; border: 1px solid #c2185b; }
+
+        p, li { font-size: 1.2rem; line-height: 1.6; }
+        ul { margin-top: 10px; }
+        li { margin-bottom: 12px; }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: var(--senai-white);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .nav-buttons button {
+            background-color: var(--senai-red);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 10px;
+            transition: opacity 0.3s;
+        }
+        .nav-buttons button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .nav-buttons button:hover:not(:disabled) { opacity: 0.8; }
+
+        .important-box {
+            background-color: #e6fffa;
+            border-left: 10px solid var(--nlp-teal);
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .example-box {
+            background-color: #fff4f0;
+            border-left: 10px solid var(--speech-orange);
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .tip-box {
+            background-color: var(--highlight-yellow);
+            border-left: 10px solid var(--highlight-yellow-border);
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 0 4px;
+        }
+        .tag-person { background: #3b82f6; }
+        .tag-date { background: #f59e0b; }
+        .tag-loc { background: #10b981; }
+        .tag-org { background: #8b5cf6; }
+
+        .diagram-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f0fdfa;
+            border-radius: 12px;
+            border: 1px dashed var(--nlp-teal);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .step {
+            background: white;
+            border: 2px solid var(--nlp-teal);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            min-width: 120px;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+        .step-orange {
+            border-color: var(--speech-orange);
+        }
+
+        .arrow { font-size: 1.8rem; color: var(--nlp-teal); }
+        .arrow-orange { color: var(--speech-orange); }
+
+        .capa {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--nlp-teal) 0%, #004d4d 100%);
+            color: white;
+        }
+        .capa h1 { font-size: 3.5rem; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); color: white; }
+        .capa h2 { color: white; border: none; font-size: 1.6rem; margin-top: 20px; }
+        .capa p { font-size: 1.2rem; opacity: 0.9; }
+
+        .section-divider {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .section-divider h2 {
+            font-size: 2.8rem;
+            border: none;
+            color: var(--nlp-teal);
+        }
+        .section-divider .icon { font-size: 4rem; margin-bottom: 10px; }
+        .section-divider p { font-size: 1.3rem; color: #666; }
+
+        .slide-number { font-weight: bold; color: var(--senai-gray); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 1rem; }
+        th { background-color: var(--nlp-teal); color: white; padding: 12px; text-align: left; }
+        td { border: 1px solid #ddd; padding: 11px; vertical-align: top; }
+        tr:nth-child(even) td { background-color: #f9f9f9; }
+
+        .code-block {
+            background: var(--code-bg);
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+        .code-block .kw { color: #c678dd; }
+        .code-block .str { color: #98c379; }
+        .code-block .num { color: #d19a66; }
+        .code-block .comment { color: #7a8394; font-style: italic; }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .col-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .col-box h3 { margin: 0 0 10px 0; color: var(--nlp-teal); font-size: 1.1rem; }
+
+        .token {
+            display: inline-block;
+            background: #e0f7fa;
+            border: 1px solid var(--nlp-teal);
+            color: var(--nlp-teal);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 4px;
+            font-size: 1.1rem;
+        }
+        .token-removed {
+            background: #fce4ec;
+            border-color: #e91e63;
+            color: #c62828;
+            text-decoration: line-through;
+        }
+        .token-root {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .progress-bar-outer {
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 6px;
+            height: 24px;
+            margin: 6px 0;
+        }
+        .progress-bar-inner {
+            height: 24px;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>AI-900: Fundamentos de IA no Microsoft Azure</h1>
+    <span>Dia 04: PLN — Processamento de Linguagem Natural e Fala</span>
+</header>
+
+<div id="slide-container">
+
+    <!-- =========================================
+         SLIDE 1: CAPA
+         ========================================= -->
+    <section class="slide active capa">
+        <h1>AI-900</h1>
+        <h2>Dia 04: Ensinando Máquinas a Ler e Falar</h2>
+        <p>Processamento de Linguagem Natural (PLN) · Fala · Tradução · Bots</p>
+    </section>
+
+    <!-- =========================================
+         SLIDE 2: AGENDA
+         ========================================= -->
+    <section class="slide">
+        <h2>Agenda do Dia</h2>
+        <table>
+            <tr><th>#</th><th>Bloco</th><th>Tópicos</th></tr>
+            <tr><td>1</td><td><strong>Fundamentos PLN</strong></td><td>Tokenização, Normalização, Stop Words, Stemming, Lematização</td></tr>
+            <tr><td>2</td><td><strong>Análise Estatística de Texto</strong></td><td>Bag of Words, TF-IDF, N-gramas</td></tr>
+            <tr><td>3</td><td><strong>Modelos Semânticos</strong></td><td>Word Embeddings, Word2Vec, Transformers, BERT</td></tr>
+            <tr><td>4</td><td><strong>Azure AI Language</strong></td><td>Sentimento, NER, PII, Key Phrases, CLU, Q&amp;A</td></tr>
+            <tr><td>5</td><td><strong>Azure AI Speech</strong></td><td>STT, TTS, SSML, Custom Speech, Tradução</td></tr>
+        </table>
+    </section>
+
+    <!-- =========================================
+         SEÇÃO: FUNDAMENTOS PLN
+         ========================================= -->
+
+    <!-- SLIDE 3: O QUE É PLN -->
+    <section class="slide section-divider">
+        <div class="icon">🧠</div>
+        <h2>Parte 1: Fundamentos de PLN</h2>
+        <p>Como ensinar uma máquina a entender a linguagem humana?</p>
+    </section>
+
+    <!-- SLIDE 4: O PROBLEMA -->
+    <section class="slide">
+        <span class="section-label label-nlp">PLN — Conceito</span>
+        <h2>O que é PLN / NLP?</h2>
+        <p><strong>Processamento de Linguagem Natural (PLN)</strong> é a área da IA que permite que computadores compreendam, interpretem e gerem linguagem humana.</p>
+        <div class="two-col">
+            <div class="col-box">
+                <h3>Entrada (o que humanos produzem)</h3>
+                <ul style="margin:0; padding-left: 20px;">
+                    <li>Texto escrito</li>
+                    <li>Fala (áudio)</li>
+                    <li>Documentos, e-mails, chats</li>
+                </ul>
+            </div>
+            <div class="col-box">
+                <h3>Saída (o que a máquina entende)</h3>
+                <ul style="margin:0; padding-left: 20px;">
+                    <li>Intenção do usuário</li>
+                    <li>Sentimento expresso</li>
+                    <li>Entidades e fatos</li>
+                </ul>
+            </div>
+        </div>
+        <div class="important-box">
+            <strong>Analogia:</strong> PLN é como um tradutor que não só converte idiomas, mas também entende contexto, sarcasmo e intenção.
+        </div>
+    </section>
+
+    <!-- SLIDE 5: POR QUE É DIFÍCIL -->
+    <section class="slide">
+        <span class="section-label label-nlp">PLN — Desafios</span>
+        <h2>Por que PLN é difícil?</h2>
+        <p>A linguagem humana é ambígua por natureza:</p>
+        <div class="example-box">
+            <strong>Ambiguidade léxica:</strong> "O <em>banco</em> estava sujo."<br>
+            → Banco de praça? Banco financeiro?
+        </div>
+        <div class="example-box" style="margin-top: 10px;">
+            <strong>Ambiguidade sintática:</strong> "Vi o homem com o telescópio."<br>
+            → Eu usava o telescópio? Ou ele segurava?
+        </div>
+        <div class="example-box" style="margin-top: 10px;">
+            <strong>Sarcasmo:</strong> "Que serviço <em>maravilhoso</em>..." (cliente insatisfeito)
+        </div>
+        <p style="margin-top: 15px;">A IA precisa de <strong>contexto</strong> para desambiguar — e é exatamente isso que os modelos modernos aprendem.</p>
+    </section>
+
+    <!-- SLIDE 6: PIPELINE NLP VISÃO GERAL -->
+    <section class="slide">
+        <span class="section-label label-nlp">PLN — Pipeline</span>
+        <h2>O Pipeline de Processamento de Texto</h2>
+        <p>Antes de um modelo entender texto, o texto precisa ser <strong>preparado</strong>:</p>
+        <div class="diagram-container">
+            <div class="step">1. Tokenização</div>
+            <div class="arrow">➡️</div>
+            <div class="step">2. Normalização</div>
+            <div class="arrow">➡️</div>
+            <div class="step">3. Remoção Stop Words</div>
+            <div class="arrow">➡️</div>
+            <div class="step">4. Lematização</div>
+            <div class="arrow">➡️</div>
+            <div class="step">5. Vetorização</div>
+        </div>
+        <div class="important-box">
+            <strong>Analogia:</strong> É como preparar ingredientes antes de cozinhar. A máquina só consegue "processar" texto que está limpo e estruturado.
+        </div>
+    </section>
+
+    <!-- SLIDE 7: TOKENIZAÇÃO -->
+    <section class="slide">
+        <span class="section-label label-nlp">PLN — Tokenização</span>
+        <h2>Tokenização</h2>
+        <p><strong>Token</strong> é a unidade mínima de texto. Tokenizar é quebrar uma frase em pedaços processáveis.</p>
+        <div class="example-box">
+            <strong>Frase:</strong> "O Azure analisa texto com IA."
+        </div>
+        <p style="margin-top: 15px;"><strong>Tokens gerados:</strong></p>
+        <div>
+            <span class="token">O</span>
+            <span class="token">Azure</span>
+            <span class="token">analisa</span>
+            <span class="token">texto</span>
+            <span class="token">com</span>
+            <span class="token">IA</span>
+            <span class="token">.</span>
+        </div>
+        <div class="two-col" style="margin-top: 20px;">
+            <div class="col-box">
+                <h3>Tokenização por Palavra</h3>
+                <p style="font-size: 1rem;">"não" → [não]<br>Mais simples, mais comum.</p>
+            </div>
+            <div class="col-box">
+                <h3>Tokenização por Subpalavra (BPE)</h3>
+                <p style="font-size: 1rem;">"incrível" → [in][crível]<br>Usada em GPT, BERT — lida melhor com palavras raras.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 8: STOP WORDS E NORMALIZAÇÃO -->
+    <section class="slide">
+        <span class="section-label label-nlp">PLN — Normalização</span>
+        <h2>Normalização e Remoção de Stop Words</h2>
+        <p><strong>Normalização:</strong> Padronizar o texto (minúsculas, remover acentos, pontuação).</p>
+        <p><strong>Stop Words:</strong> Palavras tão comuns que não agregam significado à análise.</p>
+        <div class="example-box">
+            <strong>Frase original:</strong> "A reunião <strong>de</strong> hoje <strong>foi</strong> muito <strong>boa</strong> <strong>para</strong> <strong>o</strong> time"<br><br>
+            <strong>Após remover stop words:</strong><br>
+            <span class="token-removed token">A</span>
+            <span class="token">reunião</span>
+            <span class="token-removed token">de</span>
+            <span class="token">hoje</span>
+            <span class="token-removed token">foi</span>
+            <span class="token">muito</span>
+            <span class="token">boa</span>
+            <span class="token-removed token">para</span>
+            <span class="token-removed token">o</span>
+            <span class="token">time</span>
+        </div>
+        <div class="important-box" style="margin-top: 15px;">
+            <strong>Cuidado:</strong> "não" é uma stop word em alguns dicionários, mas remover ela pode inverter o sentido: "bom" ≠ "não bom".
+        </div>
+    </section>
+
+    <!-- SLIDE 9: STEMMING VS LEMATIZAÇÃO -->
+    <section class="slide">
+        <span class="section-label label-nlp">PLN — Normalização</span>
+        <h2>Stemming vs. Lematização</h2>
+        <p>Ambas reduzem palavras à sua forma base para que variações sejam tratadas como iguais.</p>
+        <div class="two-col">
+            <div class="col-box">
+                <h3>🪓 Stemming (Corte Bruto)</h3>
+                <p style="font-size: 0.95rem;">Remove sufixos mecanicamente. Rápido, mas pode gerar palavras inexistentes.</p>
+                <p style="font-size: 1rem;">
+                    "correndo" → <span class="token-root token">corr</span><br>
+                    "corrida" → <span class="token-root token">corr</span><br>
+                    "corre" → <span class="token-root token">corr</span>
+                </p>
+            </div>
+            <div class="col-box">
+                <h3>📖 Lematização (Raiz Linguística)</h3>
+                <p style="font-size: 0.95rem;">Usa dicionário para encontrar a forma canônica real. Mais preciso.</p>
+                <p style="font-size: 1rem;">
+                    "correndo" → <span class="token-root token">correr</span><br>
+                    "melhores" → <span class="token-root token">bom</span><br>
+                    "foi" → <span class="token-root token">ser/ir</span>
+                </p>
+            </div>
+        </div>
+        <div class="important-box" style="margin-top: 15px;">
+            Os serviços Azure AI usam lematização internamente. Você não precisa fazer isso manualmente ao usar a API.
+        </div>
+    </section>
+
+    <!-- =========================================
+         SEÇÃO: ANÁLISE ESTATÍSTICA
+         ========================================= -->
+
+    <!-- SLIDE 10: SEÇÃO DIVIDER -->
+    <section class="slide section-divider">
+        <div class="icon">📊</div>
+        <h2>Parte 2: Análise Estatística de Texto</h2>
+        <p>Como representar texto em números para que a máquina possa calcular significado?</p>
+    </section>
+
+    <!-- SLIDE 11: BAG OF WORDS -->
+    <section class="slide">
+        <span class="section-label label-nlp">Análise Estatística</span>
+        <h2>Bag of Words (BoW)</h2>
+        <p>A abordagem mais simples: cada documento é representado pela <strong>contagem de cada palavra</strong>, ignorando ordem.</p>
+        <table>
+            <tr><th>Documento</th><th>"gato"</th><th>"cachorro"</th><th>"come"</th><th>"dorme"</th></tr>
+            <tr><td>"O gato come e dorme"</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>"O cachorro come muito"</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+        </table>
+        <div class="two-col" style="margin-top: 15px;">
+            <div class="col-box">
+                <h3>✅ Vantagens</h3>
+                <ul style="margin:0; padding-left:18px; font-size: 0.95rem;">
+                    <li>Simples de implementar</li>
+                    <li>Funciona bem em classificação de texto</li>
+                </ul>
+            </div>
+            <div class="col-box">
+                <h3>❌ Limitações</h3>
+                <ul style="margin:0; padding-left:18px; font-size: 0.95rem;">
+                    <li>Ignora ordem das palavras</li>
+                    <li>"rei" e "rainha" parecem não relacionados</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 12: TF-IDF -->
+    <section class="slide">
+        <span class="section-label label-nlp">Análise Estatística</span>
+        <h2>TF-IDF — Peso das Palavras</h2>
+        <p><strong>TF-IDF</strong> (Term Frequency – Inverse Document Frequency) mede o quão importante uma palavra é para um documento específico dentro de um conjunto de documentos.</p>
+        <div class="two-col">
+            <div class="col-box">
+                <h3>TF — Frequência no Doc</h3>
+                <p style="font-size: 0.95rem;">Quantas vezes a palavra aparece <em>neste documento</em>. Palavras que aparecem muito são relevantes.</p>
+            </div>
+            <div class="col-box">
+                <h3>IDF — Raridade no Corpus</h3>
+                <p style="font-size: 0.95rem;">Palavras que aparecem em <em>todos</em> os documentos têm peso baixo ("o", "de"). Palavras raras têm peso alto.</p>
+            </div>
+        </div>
+        <div class="example-box" style="margin-top: 15px;">
+            <strong>Exemplo prático:</strong> Numa coleção de avaliações de restaurantes, a palavra "pizza" tem alto TF-IDF em críticas de pizzarias — mas não em avaliações de sushis, mesmo que "pizza" apareça raramente lá.
+        </div>
+        <div class="important-box">
+            <strong>Uso real no Azure:</strong> O serviço de busca cognitiva (Azure AI Search) usa TF-IDF para ranquear resultados de pesquisa.
+        </div>
+    </section>
+
+    <!-- SLIDE 13: N-GRAMAS -->
+    <section class="slide">
+        <span class="section-label label-nlp">Análise Estatística</span>
+        <h2>N-gramas: Capturando Sequências</h2>
+        <p>Um <strong>n-grama</strong> é uma sequência de N palavras consecutivas. Captura <em>contexto local</em> que o Bag of Words perde.</p>
+        <div class="example-box">
+            <strong>Frase:</strong> "não gostei do produto"
+        </div>
+        <table style="margin-top: 15px;">
+            <tr><th>Tipo</th><th>N</th><th>Tokens gerados</th></tr>
+            <tr><td>Unigrama</td><td>1</td><td>[não] [gostei] [do] [produto]</td></tr>
+            <tr><td>Bigrama</td><td>2</td><td>[não gostei] [gostei do] [do produto]</td></tr>
+            <tr><td>Trigrama</td><td>3</td><td>[não gostei do] [gostei do produto]</td></tr>
+        </table>
+        <div class="important-box" style="margin-top: 15px;">
+            Com bigramas, "não gostei" é capturado como unidade — resolvendo o problema da negação que Bag of Words ignora.
+        </div>
+    </section>
+
+    <!-- =========================================
+         SEÇÃO: MODELOS SEMÂNTICOS
+         ========================================= -->
+
+    <!-- SLIDE 14: SEÇÃO DIVIDER -->
+    <section class="slide section-divider">
+        <div class="icon">🔗</div>
+        <h2>Parte 3: Modelos de Linguagem Semântica</h2>
+        <p>Além da contagem: como representar o <em>significado</em> das palavras?</p>
+    </section>
+
+    <!-- SLIDE 15: WORD EMBEDDINGS -->
+    <section class="slide">
+        <span class="section-label label-nlp">Modelos Semânticos</span>
+        <h2>Word Embeddings — Palavras como Vetores</h2>
+        <p>Em vez de contar palavras, mapeamos cada palavra a um ponto em um espaço multidimensional. Palavras com <strong>significados parecidos ficam próximas</strong>.</p>
+        <div class="diagram-container">
+            <div style="text-align:center; font-size: 1.1rem;">
+                <p><strong>rei</strong> → [0.9, 0.3, 0.7, ...]</p>
+                <p><strong>rainha</strong> → [0.9, 0.3, -0.7, ...]</p>
+                <p><strong>homem</strong> → [0.8, 0.2, 0.7, ...]</p>
+                <p><strong>mulher</strong> → [0.8, 0.2, -0.7, ...]</p>
+            </div>
+        </div>
+        <div class="important-box">
+            <strong>A equação famosa do Word2Vec:</strong><br>
+            <code style="font-size: 1.1rem;"><strong>rei</strong> − <strong>homem</strong> + <strong>mulher</strong> ≈ <strong>rainha</strong></code><br>
+            A aritmética de vetores captura relações semânticas!
+        </div>
+    </section>
+
+    <!-- SLIDE 16: TRANSFORMERS E BERT -->
+    <section class="slide">
+        <span class="section-label label-nlp">Modelos Semânticos</span>
+        <h2>Transformers e BERT</h2>
+        <p>Word2Vec tem um problema: <em>"banco"</em> sempre tem o mesmo vetor, independente do contexto. Os <strong>Transformers</strong> resolvem isso.</p>
+        <div class="two-col">
+            <div class="col-box">
+                <h3>🏦 Transformer entende contexto</h3>
+                <p style="font-size: 0.95rem;">"Sentei no <strong>banco</strong> da praça" → vetor de <em>assento</em><br>"Fui ao <strong>banco</strong> sacar dinheiro" → vetor de <em>instituição</em></p>
+            </div>
+            <div class="col-box">
+                <h3>🤖 BERT (Google, 2018)</h3>
+                <p style="font-size: 0.95rem;"><strong>B</strong>idirectional <strong>E</strong>ncoder <strong>R</strong>epresentations from <strong>T</strong>ransformers. Lê o texto nos dois sentidos para entender contexto completo.</p>
+            </div>
+        </div>
+        <div class="important-box" style="margin-top: 15px;">
+            <strong>Relevância para AI-900:</strong> Os serviços do Azure AI Language (análise de sentimento, NER, etc.) usam internamente modelos baseados em Transformers. Você consome via API sem precisar treinar nada.
+        </div>
+    </section>
+
+    <!-- SLIDE 17: MODELOS DE LINGUAGEM DE GRANDE ESCALA -->
+    <section class="slide">
+        <span class="section-label label-nlp">Modelos Semânticos</span>
+        <h2>LLMs — Modelos de Linguagem de Grande Escala</h2>
+        <p>BERT → GPT → GPT-4 → Azure OpenAI. A evolução dos Transformers gerou os <strong>Large Language Models (LLMs)</strong>.</p>
+        <table>
+            <tr><th>Modelo Clássico (CLU/Regras)</th><th>LLM (GPT, Azure OpenAI)</th></tr>
+            <tr><td>Precisa de exemplos rotulados</td><td>Entende instruções em linguagem natural</td></tr>
+            <tr><td>Intenções pré-definidas</td><td>Flexível — interpreta qualquer frase</td></tr>
+            <tr><td>Rápido e barato para tarefas simples</td><td>Poderoso mas mais caro por chamada</td></tr>
+            <tr><td>"Ligar luz da sala"</td><td>"Me explique PLN de um jeito divertido"</td></tr>
+        </table>
+        <div class="tip-box">
+            <strong>Dica de prova AI-900:</strong> CLU é ideal para comandos estruturados. Para conversação aberta e geração de texto, use Azure OpenAI (GPT).
+        </div>
+    </section>
+
+    <!-- =========================================
+         SEÇÃO: AZURE AI LANGUAGE
+         ========================================= -->
+
+    <!-- SLIDE 18: SEÇÃO DIVIDER -->
+    <section class="slide section-divider">
+        <div class="icon">☁️</div>
+        <h2>Parte 4: Azure AI Language</h2>
+        <p>APIs prontas para análise de texto — sem treinar modelos do zero.</p>
+    </section>
+
+    <!-- SLIDE 19: AZURE AI LANGUAGE VISÃO GERAL -->
+    <section class="slide">
+        <span class="section-label label-nlp">Azure AI Language</span>
+        <h2>O que é o Azure AI Language?</h2>
+        <p>Um serviço gerenciado com múltiplas APIs para entender texto. Você envia texto, recebe JSON estruturado.</p>
+        <div class="diagram-container">
+            <div class="step">Texto / Documento</div>
+            <div class="arrow">➡️</div>
+            <div class="step">Azure AI Language API</div>
+            <div class="arrow">➡️</div>
+            <div class="step">JSON com Insights</div>
+        </div>
+        <table style="margin-top: 10px;">
+            <tr><th>Recurso</th><th>O que faz</th></tr>
+            <tr><td>Análise de Sentimento</td><td>Detecta emoção positiva, negativa, neutra</td></tr>
+            <tr><td>NER</td><td>Identifica pessoas, locais, datas no texto</td></tr>
+            <tr><td>PII Detection</td><td>Detecta e mascara dados pessoais sensíveis</td></tr>
+            <tr><td>Key Phrase Extraction</td><td>Extrai os conceitos principais do texto</td></tr>
+            <tr><td>Language Detection</td><td>Identifica o idioma do texto</td></tr>
+        </table>
+    </section>
+
+    <!-- SLIDE 20: ANÁLISE DE SENTIMENTO -->
+    <section class="slide">
+        <span class="section-label label-nlp">Azure AI Language</span>
+        <h2>Análise de Sentimento</h2>
+        <p>Detecta a emoção predominante em um texto. Retorna um <strong>rótulo</strong> + <strong>score de confiança</strong> (0.0 a 1.0).</p>
+        <table>
+            <tr><th>Frase</th><th>Rótulo</th><th>Confiança</th></tr>
+            <tr><td>"O produto é excelente!"</td><td>✅ Positivo</td><td>0.97</td></tr>
+            <tr><td>"A entrega atrasou muito."</td><td>❌ Negativo</td><td>0.89</td></tr>
+            <tr><td>"O produto chegou na caixa."</td><td>➖ Neutro</td><td>0.76</td></tr>
+            <tr><td>"A comida estava ótima, mas o serviço demorou."</td><td>⚖️ Misto</td><td>—</td></tr>
+        </table>
+        <div class="important-box" style="margin-top: 15px;">
+            <strong>Opinion Mining (Análise de Aspecto):</strong> Liga o sentimento ao aspecto específico.<br>
+            "A <em>bateria</em> é <strong>ruim</strong>" → Aspecto: bateria | Sentimento: negativo
+        </div>
+    </section>
+
+    <!-- SLIDE 21: NER -->
+    <section class="slide">
+        <span class="section-label label-nlp">Azure AI Language</span>
+        <h2>NER — Reconhecimento de Entidades Nomeadas</h2>
+        <p>Identifica e <strong>categoriza objetos do mundo real</strong> mencionados no texto.</p>
+        <div class="important-box" style="font-size: 1.2rem;">
+            "Agendar reunião com <span class="tag tag-person">Lucas Mendes</span> na <span class="tag tag-loc">Av. Paulista, 1000</span> em <span class="tag tag-date">10 de Abril às 15h</span> sobre o projeto da <span class="tag tag-org">Microsoft</span>."
+        </div>
+        <table style="margin-top: 15px;">
+            <tr><th>Categoria</th><th>Exemplos</th></tr>
+            <tr><td>Person</td><td>Lucas Mendes, Ayrton Senna</td></tr>
+            <tr><td>Location</td><td>Av. Paulista, São Paulo, Brasil</td></tr>
+            <tr><td>Organization</td><td>Microsoft, SENAI, Banco do Brasil</td></tr>
+            <tr><td>DateTime</td><td>10 de Abril, amanhã, às 15h</td></tr>
+            <tr><td>Quantity / Email / URL / IP</td><td>50 reais, teste@email.com</td></tr>
+        </table>
+    </section>
+
+    <!-- SLIDE 22: PII DETECTION -->
+    <section class="slide">
+        <span class="section-label label-nlp">Azure AI Language</span>
+        <h2>PII Detection — Protegendo Dados Pessoais</h2>
+        <p><strong>PII</strong> (Personally Identifiable Information) = dados que identificam uma pessoa. O serviço detecta <em>e redige</em> automaticamente.</p>
+        <div class="code-block">
+            <span class="comment">// Entrada</span><br>
+            "Meu CPF é <span class="str">123.456.789-00</span> e moro na <span class="str">Rua das Flores, 42, São Paulo</span>."<br><br>
+            <span class="comment">// Saída (após redação)</span><br>
+            "Meu CPF é <span class="kw">***.***.***-**</span> e moro na <span class="kw">[ENDEREÇO REMOVIDO]</span>."
+        </div>
+        <ul>
+            <li>CPF, RG, número de cartão de crédito, passaporte</li>
+            <li>Endereços residenciais, telefones, e-mails</li>
+            <li>Endereços IP, contas bancárias</li>
+        </ul>
+        <div class="tip-box">
+            <strong>Contexto Legal:</strong> A <strong>LGPD</strong> (Lei Geral de Proteção de Dados) exige que PII seja protegida. O PII Detection automatiza essa conformidade em pipelines de dados.
+        </div>
+    </section>
+
+    <!-- SLIDE 23: KEY PHRASES E LANGUAGE DETECTION -->
+    <section class="slide">
+        <span class="section-label label-nlp">Azure AI Language</span>
+        <h2>Key Phrase Extraction e Detecção de Idioma</h2>
+        <div class="two-col">
+            <div class="col-box">
+                <h3>🔑 Key Phrase Extraction</h3>
+                <p style="font-size: 0.95rem;">Extrai os <strong>conceitos principais</strong> de um texto longo. Útil para indexar documentos e gerar resumos automáticos.</p>
+                <div class="example-box" style="font-size: 0.9rem; margin-top: 8px;">
+                    Texto: "A reunião discutiu estratégias de marketing digital para o lançamento do novo produto no mercado brasileiro."<br><br>
+                    <strong>Key Phrases:</strong> marketing digital, lançamento, novo produto, mercado brasileiro
+                </div>
+            </div>
+            <div class="col-box">
+                <h3>🌐 Language Detection</h3>
+                <p style="font-size: 0.95rem;">Identifica automaticamente o idioma de um texto. Retorna o código ISO + score de confiança.</p>
+                <table style="margin-top: 8px; font-size: 0.85rem;">
+                    <tr><th>Texto</th><th>Idioma</th><th>Score</th></tr>
+                    <tr><td>"Bom dia!"</td><td>pt-BR</td><td>1.0</td></tr>
+                    <tr><td>"Good morning!"</td><td>en-US</td><td>0.99</td></tr>
+                    <tr><td>"Bonjour!"</td><td>fr-FR</td><td>0.98</td></tr>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================
+         SEÇÃO: CLU
+         ========================================= -->
+
+    <!-- SLIDE 24: CLU INTRODUÇÃO -->
+    <section class="slide">
+        <span class="section-label label-nlp">Conversational AI</span>
+        <h2>CLU — Conversational Language Understanding</h2>
+        <p>A tecnologia por trás de chatbots inteligentes. O objetivo é entender <strong>o que o usuário quer fazer</strong> e <strong>quais dados ele forneceu</strong>.</p>
+        <div class="diagram-container">
+            <div class="step">Usuário fala/digita<br><em>"Utterance"</em></div>
+            <div class="arrow">➡️</div>
+            <div class="step">CLU Classifica<br><em>"Intent"</em></div>
+            <div class="arrow">➡️</div>
+            <div class="step">CLU Extrai<br><em>"Entities"</em></div>
+            <div class="arrow">➡️</div>
+            <div class="step">Backend<br>executa ação</div>
+        </div>
+        <div class="example-box">
+            <strong>Exemplos de uso:</strong> assistente de voz residencial (Alexa), bot de atendimento bancário, chatbot de suporte técnico, pedidos por voz em delivery.
+        </div>
+    </section>
+
+    <!-- SLIDE 25: TRÍADE CLU -->
+    <section class="slide">
+        <span class="section-label label-nlp">Conversational AI</span>
+        <h2>A Tríade Sagrada do CLU</h2>
+        <table>
+            <tr>
+                <th>Conceito</th>
+                <th>Definição</th>
+                <th>Exemplo 1 — Casa Inteligente</th>
+                <th>Exemplo 2 — Delivery</th>
+            </tr>
+            <tr>
+                <td><strong>Utterance</strong><br>(Enunciado)</td>
+                <td>O que o usuário disse ou digitou — a frase completa.</td>
+                <td>"Ligue a luz da cozinha em azul"</td>
+                <td>"Quero uma pizza grande de calabresa"</td>
+            </tr>
+            <tr>
+                <td><strong>Intent</strong><br>(Intenção)</td>
+                <td>O objetivo da ação — o que o bot deve fazer.</td>
+                <td><em>TurnOnLight</em></td>
+                <td><em>OrderFood</em></td>
+            </tr>
+            <tr>
+                <td><strong>Entity</strong><br>(Entidade)</td>
+                <td>Os parâmetros específicos da ação — os dados extras.</td>
+                <td>Local: Cozinha<br>Cor: Azul</td>
+                <td>Tamanho: Grande<br>Sabor: Calabresa</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- SLIDE 26: INTENTS E ENTITIES EM DETALHE -->
+    <section class="slide">
+        <span class="section-label label-nlp">Conversational AI</span>
+        <h2>Projetando Intents e Entities</h2>
+        <div class="two-col">
+            <div class="col-box">
+                <h3>📌 Boas Práticas para Intents</h3>
+                <ul style="margin:0; padding-left:18px; font-size: 0.95rem;">
+                    <li>Nome de ação clara: <em>ReservarMesa</em>, <em>CancelarPedido</em></li>
+                    <li>Mínimo 15-20 utterances por intent para treino</li>
+                    <li>Variar as frases: curtas, longas, com gírias</li>
+                    <li>Sempre incluir a intent <strong>None</strong></li>
+                </ul>
+            </div>
+            <div class="col-box">
+                <h3>🏷️ Tipos de Entities</h3>
+                <ul style="margin:0; padding-left:18px; font-size: 0.95rem;">
+                    <li><strong>Learned:</strong> Treinadas com exemplos rotulados ("cozinha", "sala")</li>
+                    <li><strong>List:</strong> Lista fixa de valores (dias da semana)</li>
+                    <li><strong>Prebuilt:</strong> Prontas — número, data, hora, e-mail</li>
+                </ul>
+            </div>
+        </div>
+        <div class="important-box" style="margin-top: 15px;">
+            <strong>A Intent None é obrigatória.</strong> Todo bot CLU deve capturar o que ele NÃO sabe fazer. Se o bot de luzes receber "Qual o preço do dólar?", deve cair em <em>None</em> e responder "Não entendi, pode repetir?".
+        </div>
+    </section>
+
+    <!-- SLIDE 27: QUESTION ANSWERING -->
+    <section class="slide">
+        <span class="section-label label-nlp">Conversational AI</span>
+        <h2>Question Answering — Base de Conhecimento</h2>
+        <p>A forma mais rápida de criar um bot informativo. Você <strong>não programa as respostas</strong> — você alimenta o sistema com documentos.</p>
+        <div class="diagram-container">
+            <div class="step">Upload de PDF/<br>FAQ/URL</div>
+            <div class="arrow">➡️</div>
+            <div class="step">Azure indexa<br>perguntas e<br>respostas</div>
+            <div class="arrow">➡️</div>
+            <div class="step">Usuário pergunta</div>
+            <div class="arrow">➡️</div>
+            <div class="step">Bot responde<br>com trecho<br>relevante</div>
+        </div>
+        <div class="two-col" style="margin-top: 10px;">
+            <div class="col-box">
+                <h3>📄 Fontes aceitas</h3>
+                <ul style="margin:0; padding-left:18px; font-size:0.9rem;">
+                    <li>Arquivos PDF e DOCX</li>
+                    <li>URLs de páginas de FAQ</li>
+                    <li>Pares P&amp;R digitados manualmente</li>
+                </ul>
+            </div>
+            <div class="col-box">
+                <h3>😄 Chit-chat (Personalidade)</h3>
+                <ul style="margin:0; padding-left:18px; font-size:0.9rem;">
+                    <li><strong>Professional:</strong> "Como posso ajudar?"</li>
+                    <li><strong>Friendly:</strong> "Oi! Tudo bem? 😊"</li>
+                    <li><strong>Witty:</strong> Respostas bem-humoradas</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================
+         SEÇÃO: AZURE AI SPEECH
+         ========================================= -->
+
+    <!-- SLIDE 28: SEÇÃO DIVIDER -->
+    <section class="slide section-divider">
+        <div class="icon">🎙️</div>
+        <h2>Parte 5: Azure AI Speech</h2>
+        <p>Reconhecimento de fala, síntese de voz e agentes com capacidade de fala.</p>
+    </section>
+
+    <!-- SLIDE 29: AZURE AI SPEECH VISÃO GERAL -->
+    <section class="slide">
+        <span class="section-label label-speech">Azure AI Speech</span>
+        <h2>O que é Azure AI Speech?</h2>
+        <p>Serviço de IA para converter entre áudio e texto, em ambos os sentidos, com vozes que soam quase humanas.</p>
+        <div class="diagram-container">
+            <div class="step step-orange">🎤 Microfone<br>(Áudio)</div>
+            <div class="arrow arrow-orange">➡️ STT</div>
+            <div class="step step-orange">📄 Texto</div>
+            <div class="arrow arrow-orange">TTS ➡️</div>
+            <div class="step step-orange">🔊 Alto-falante<br>(Áudio)</div>
+        </div>
+        <table style="margin-top: 10px;">
+            <tr><th>Recurso</th><th>Função</th></tr>
+            <tr><td>Speech-to-Text (STT)</td><td>Transcreve áudio falado para texto</td></tr>
+            <tr><td>Text-to-Speech (TTS)</td><td>Converte texto em voz sintética</td></tr>
+            <tr><td>Speech Translation</td><td>Traduz fala em tempo real</td></tr>
+            <tr><td>Custom Speech</td><td>Treina o modelo para vocabulário específico</td></tr>
+            <tr><td>Speaker Recognition</td><td>Identifica quem está falando</td></tr>
+        </table>
+    </section>
+
+    <!-- SLIDE 30: SPEECH-TO-TEXT -->
+    <section class="slide">
+        <span class="section-label label-speech">Azure AI Speech</span>
+        <h2>Speech-to-Text (STT) — Reconhecimento de Fala</h2>
+        <p>Converte áudio em texto escrito. Dois modos principais:</p>
+        <div class="two-col">
+            <div class="col-box">
+                <h3>⚡ Real-time (Tempo Real)</h3>
+                <p style="font-size: 0.95rem;">Transcreve conforme o usuário fala. Ideal para:</p>
+                <ul style="font-size: 0.9rem; padding-left: 18px;">
+                    <li>Legendas ao vivo em reuniões (Microsoft Teams)</li>
+                    <li>Assistentes de voz interativos</li>
+                    <li>Ditado de texto em aplicativos</li>
+                </ul>
+            </div>
+            <div class="col-box">
+                <h3>📦 Batch (Lote)</h3>
+                <p style="font-size: 0.95rem;">Processa arquivos de áudio em massa. Ideal para:</p>
+                <ul style="font-size: 0.9rem; padding-left: 18px;">
+                    <li>Transcrever gravações de call center</li>
+                    <li>Indexar videoaulas para busca</li>
+                    <li>Conformidade e auditoria de áudios</li>
+                </ul>
+            </div>
+        </div>
+        <div class="important-box" style="margin-top: 15px;">
+            <strong>Custom Speech:</strong> Treina o modelo para reconhecer vocabulário técnico específico — palavras médicas ("ecocardiograma"), jurídicas ou códigos industriais ("XJ-900") — e sotaques regionais.
+        </div>
+    </section>
+
+    <!-- SLIDE 31: TEXT-TO-SPEECH -->
+    <section class="slide">
+        <span class="section-label label-speech">Azure AI Speech</span>
+        <h2>Text-to-Speech (TTS) — Síntese de Fala</h2>
+        <p>Converte texto escrito em fala sintética. As <strong>Neural Voices</strong> são quase indistinguíveis de vozes humanas (entonação, respiração, pausas).</p>
+        <ul>
+            <li><strong>+400 vozes</strong> em mais de 140 idiomas e dialetos</li>
+            <li><strong>Custom Neural Voice:</strong> Crie a voz da sua marca (como a "voz do Banco X")</li>
+        </ul>
+        <p style="margin-top: 15px;"><strong>SSML</strong> — Speech Synthesis Markup Language: Controle fino da voz via XML:</p>
+        <div class="code-block">
+<span class="kw">&lt;speak&gt;</span>
+  Prezado cliente, seu pedido foi aprovado.
+  <span class="kw">&lt;break time="500ms"/&gt;</span>
+  <span class="kw">&lt;prosody rate="slow" pitch="low"&gt;</span>
+    Valor total: trezentos reais.
+  <span class="kw">&lt;/prosody&gt;</span>
+  <span class="kw">&lt;emphasis level="strong"&gt;</span>Obrigado!<span class="kw">&lt;/emphasis&gt;</span>
+<span class="kw">&lt;/speak&gt;</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 32: AGENTE COM FALA -->
+    <section class="slide">
+        <span class="section-label label-speech">Azure AI Speech</span>
+        <h2>Criando um Agente com Capacidade de Fala</h2>
+        <p>A combinação de Speech + CLU cria um agente de voz completo — o "assistente inteligente".</p>
+        <div class="diagram-container">
+            <div class="step step-orange">🎤 Usuário fala</div>
+            <div class="arrow arrow-orange">➡️</div>
+            <div class="step">STT converte<br>para texto</div>
+            <div class="arrow">➡️</div>
+            <div class="step">CLU entende<br>Intent + Entities</div>
+            <div class="arrow">➡️</div>
+            <div class="step">Backend<br>executa lógica</div>
+            <div class="arrow">➡️</div>
+            <div class="step">TTS responde<br>em voz</div>
+        </div>
+        <div class="two-col" style="margin-top: 10px;">
+            <div class="col-box">
+                <h3>Casos de Uso Reais</h3>
+                <ul style="margin:0; padding-left:18px; font-size:0.9rem;">
+                    <li>Call centers automatizados</li>
+                    <li>Assistentes em veículos (mãos livres)</li>
+                    <li>Acessibilidade para deficientes visuais</li>
+                    <li>Quiosques de autoatendimento</li>
+                </ul>
+            </div>
+            <div class="col-box">
+                <h3>No Microsoft Foundry</h3>
+                <ul style="margin:0; padding-left:18px; font-size:0.9rem;">
+                    <li>Crie o recurso Speech no Azure Portal</li>
+                    <li>Conecte ao Speech Studio</li>
+                    <li>Integre CLU ao Copilot Studio</li>
+                    <li>Publique como bot no Teams ou WhatsApp</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 33: TRADUÇÃO -->
+    <section class="slide">
+        <span class="section-label label-speech">Azure AI Translator</span>
+        <h2>Azure AI Translator</h2>
+        <p>Tradução automática neural para <strong>mais de 100 idiomas</strong>. Baseada em redes neurais — muito superior à tradução por dicionário.</p>
+        <table>
+            <tr><th>Recurso</th><th>O que faz</th><th>Exemplo</th></tr>
+            <tr><td><strong>Translate</strong></td><td>Texto → Texto em outro idioma</td><td>PT → EN, ES, ZH...</td></tr>
+            <tr><td><strong>Transliterate</strong></td><td>Converte escrita (não idioma)</td><td>Japonês カタカナ → romaji</td></tr>
+            <tr><td><strong>Detect</strong></td><td>Identifica o idioma automaticamente</td><td>"Hola" → Espanhol</td></tr>
+            <tr><td><strong>Document Translation</strong></td><td>Traduz documentos mantendo formatação</td><td>PDF, Word, PowerPoint</td></tr>
+        </table>
+        <div class="tip-box" style="margin-top: 15px;">
+            <strong>Dica de Prova AI-900:</strong> Para traduzir um arquivo PDF ou Word mantendo o layout original, use <strong>Document Translation</strong> — não a API de texto simples.
+        </div>
+    </section>
+
+    <!-- SLIDE 34: TRADUÇÃO DE FALA -->
+    <section class="slide">
+        <span class="section-label label-speech">Azure AI Speech</span>
+        <h2>Speech Translation — O Tradutor Universal</h2>
+        <p>Combina STT + Tradução + TTS em um único pipeline em tempo real.</p>
+        <div class="diagram-container">
+            <div class="step step-orange">🎤 Fala em<br>Português</div>
+            <div class="arrow arrow-orange">➡️</div>
+            <div class="step">STT → Texto<br>em PT</div>
+            <div class="arrow">➡️</div>
+            <div class="step">Tradução<br>PT → EN</div>
+            <div class="arrow">➡️</div>
+            <div class="step">TTS → Fala<br>em Inglês</div>
+        </div>
+        <div class="two-col" style="margin-top: 10px;">
+            <div class="col-box">
+                <h3>Saída como Texto</h3>
+                <p style="font-size: 0.9rem;">Útil para legendas em tempo real em conferências internacionais. Menor latência.</p>
+            </div>
+            <div class="col-box">
+                <h3>Saída como Voz (Audio Dubbing)</h3>
+                <p style="font-size: 0.9rem;">A fala do palestrante é sintetizada no idioma alvo. Mais imersivo para o ouvinte.</p>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <!-- =========================================
+         SEÇÃO: BOAS PRÁTICAS E FUTURO
+         ========================================= -->
+
+    <!-- SLIDE 43: BOAS PRÁTICAS -->
+    <section class="slide">
+        <span class="section-label label-nlp">Melhores Práticas</span>
+        <h2>Melhores Práticas em PLN e Bots</h2>
+        <table>
+            <tr><th>Situação</th><th>O que fazer</th></tr>
+            <tr><td>Treinar CLU</td><td>Use pelo menos 15-20 utterances por intent. Inclua frases com erros ortográficos — usuários reais erram.</td></tr>
+            <tr><td>Intent None vazia</td><td>Sempre popular a None com exemplos do que o bot NÃO deve entender.</td></tr>
+            <tr><td>Bot errando muito</td><td>Monitore as conversas reais. Veja o que está caindo em None e crie novas Intents.</td></tr>
+            <tr><td>Vocabulário técnico em voz</td><td>Use Custom Speech para treinar o modelo com os termos específicos do negócio.</td></tr>
+            <tr><td>Dados sensíveis em pipeline</td><td>Aplique PII Detection antes de armazenar ou compartilhar texto de usuários.</td></tr>
+            <tr><td>TTS para público amplo</td><td>Use SSML para ajustar velocidade (mais lento para acessibilidade) e ênfase nas informações críticas.</td></tr>
+        </table>
+    </section>
+
+    <!-- SLIDE 44: FUTURO NLP + LLM -->
+    <!-- <section class="slide">
+        <span class="section-label label-nlp">Tendências</span>
+        <h2>O Futuro: PLN Clássico + LLMs</h2>
+        <p>A IA generativa não substitui os serviços de PLN — eles se complementam:</p>
+        <table>
+            <tr><th>Cenário</th><th>Melhor escolha</th><th>Por quê</th></tr>
+            <tr><td>Bot de controle residencial<br>("ligar luz da sala")</td><td>CLU (Azure AI Language)</td><td>Previsível, rápido, barato, zero alucinação</td></tr>
+            <tr><td>Análise de sentimento de reviews</td><td>Azure AI Language</td><td>API pronta, resultados estruturados, auditável</td></tr>
+            <tr><td>Assistente de suporte técnico aberto</td><td>Azure OpenAI (GPT-4o)</td><td>Flexibilidade total, entende contexto complexo</td></tr>
+            <tr><td>Anonimização de documentos</td><td>PII Detection</td><td>Específico, preciso, conformidade regulatória</td></tr>
+        </table>
+        <div class="important-box" style="margin-top: 10px;">
+            A tendência é <strong>orquestrar</strong>: usar CLU para intenções simples, e acionar GPT apenas quando necessário — economizando custo e mantendo controle.
+        </div>
+    </section> -->
+
+    <!-- SLIDE 45: RESUMO DOS SERVIÇOS -->
+    <section class="slide">
+        <span class="section-label label-nlp">Revisão</span>
+        <h2>Mapa de Serviços Azure</h2>
+        <table>
+            <tr><th>Serviço</th><th>Subrecurso</th><th>Use quando...</th></tr>
+            <tr><td rowspan="5"><strong>Azure AI Language</strong></td><td>Sentiment Analysis</td><td>Medir satisfação de clientes</td></tr>
+            <tr><td>NER</td><td>Extrair pessoas, locais, datas de textos</td></tr>
+            <tr><td>PII Detection</td><td>Anonimizar dados pessoais (LGPD)</td></tr>
+            <tr><td>CLU</td><td>Criar chatbots com intenções estruturadas</td></tr>
+            <tr><td>Question Answering</td><td>Bot de FAQ a partir de documentos</td></tr>
+            <tr><td rowspan="3"><strong>Azure AI Speech</strong></td><td>Speech-to-Text</td><td>Transcrever áudio ou habilitar comandos de voz</td></tr>
+            <tr><td>Text-to-Speech</td><td>Leitura em voz alta, acessibilidade</td></tr>
+            <tr><td>Speech Translation</td><td>Traduzir fala em tempo real</td></tr>
+            <tr><td><strong>Azure AI Translator</strong></td><td>Document Translation</td><td>Traduzir documentos mantendo formatação</td></tr>
+        </table>
+    </section>
+
+    <!-- SLIDE 46: CONCLUSÃO -->
+    <!-- <section class="slide">
+        <h2>Conclusão do Dia 04</h2>
+        <ul>
+            <li><strong>PLN</strong> é o conjunto de técnicas que permite às máquinas entenderem linguagem humana — tokenização, normalização e vetorização são a base.</li>
+            <li><strong>Análise estatística</strong> (TF-IDF, BoW, N-gramas) transforma texto em números processáveis.</li>
+            <li><strong>Modelos semânticos</strong> (Word2Vec, Transformers, BERT) capturam o <em>significado</em> das palavras, não só a frequência.</li>
+            <li><strong>Azure AI Language</strong> oferece APIs prontas: sentimento, NER, PII, CLU e Q&amp;A.</li>
+            <li><strong>Azure AI Speech</strong> permite criar agentes que ouvem (STT), entendem (CLU) e respondem em voz (TTS).</li>
+        </ul>
+        <div class="important-box">
+            <strong>Próxima aula:</strong> Visão Computacional e Mineração de Conhecimento — como ensinar máquinas a <em>enxergar</em>.
+        </div>
+    </section> -->
+
+</div>
+
+<footer>
+    <div class="slide-number">Slide <span id="current-slide-num">1</span> de <span id="total-slides-num">46</span></div>
+    <div class="nav-buttons">
+        <button id="prev-btn" disabled>◀ Anterior</button>
+        <button id="next-btn">Próximo ▶</button>
+    </div>
+    <span>SENAI — Material Didático AI-900</span>
+</footer>
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const currentSlideNumDisplay = document.getElementById('current-slide-num');
+    const totalSlidesNumDisplay = document.getElementById('total-slides-num');
+
+    let currentSlideIndex = 0;
+    const totalSlides = slides.length;
+    totalSlidesNumDisplay.innerText = totalSlides;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            if (i === index) slide.classList.add('active');
+        });
+        currentSlideIndex = index;
+        currentSlideNumDisplay.innerText = index + 1;
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === totalSlides - 1;
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (currentSlideIndex < totalSlides - 1) showSlide(currentSlideIndex + 1);
+    });
+    prevBtn.addEventListener('click', () => {
+        if (currentSlideIndex > 0) showSlide(currentSlideIndex - 1);
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'PageDown') nextBtn.click();
+        if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevBtn.click();
+    });
+</script>
+
+</body>
+</html>
