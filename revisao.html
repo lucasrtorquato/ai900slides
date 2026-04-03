@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-900 - Mega Revisão Final (42 Slides)</title>
+    <style>
+        :root {
+            --senai-red: #E30613;
+            --azure-blue: #0078D4;
+            --senai-gray: #333333;
+            --light-bg: #F8F9FA;
+            --white: #FFFFFF;
+            --dark-blue: #002050;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-bg);
+            color: var(--senai-gray);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--dark-blue), var(--senai-red));
+            color: var(--white);
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        header h1 { margin: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        #slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 60px;
+            box-sizing: border-box;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            height: 80%;
+            background: var(--white);
+            padding: 50px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            position: relative;
+            animation: slideIn 0.4s ease-out;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .slide.active { display: flex; flex-direction: column; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        h2 {
+            color: var(--azure-blue);
+            border-left: 8px solid var(--senai-red);
+            padding-left: 20px;
+            margin-top: 0;
+            font-size: 2.4rem;
+            line-height: 1.1;
+        }
+
+        h3 { color: var(--senai-red); margin-top: 20px; font-size: 1.6rem; border-bottom: 1px solid #eee; }
+
+        p, li { font-size: 1.3rem; line-height: 1.5; color: #444; }
+        ul { margin-top: 15px; }
+        li { margin-bottom: 10px; }
+
+        .highlight-box {
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid var(--azure-blue);
+        }
+
+        .module-tag {
+            display: inline-block;
+            background: var(--senai-gray);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: var(--white);
+            padding: 10px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .nav-btn {
+            background-color: var(--senai-red);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .nav-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        .nav-btn:hover:not(:disabled) { background-color: var(--dark-blue); }
+
+        .progress-indicator { font-weight: bold; color: var(--senai-gray); }
+
+        /* Estilos específicos para diagramas e tabelas */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background-color: var(--azure-blue); color: white; text-align: left; padding: 12px; }
+        td { border: 1px solid #ddd; padding: 12px; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>AI-900: Full Review - SENAI / Microsoft</h1>
+    <div class="module-info">Mega Revisão: Dia 01 ao 05</div>
+</header>
+
+<div id="slide-container">
+
+    <section class="slide active">
+        <div style="text-align: center; margin-top: 80px;">
+            <h1 style="font-size: 4rem; color: var(--senai-red); margin: 0;">AI-900</h1>
+            <h2 style="border: none; padding: 0; color: var(--dark-blue);">Mega Revisão de Certificação</h2>
+            <p style="font-size: 1.5rem; margin-top: 30px;">Consolidando o conhecimento para o exame e para o mercado.</p>
+            <hr style="width: 100px; border: 2px solid var(--senai-red); margin-top: 50px;">
+        </div>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">INTRODUÇÃO</span>
+        <h2>Agenda da Revisão</h2>
+        <ul>
+            <li><b>Módulo 1:</b> Fundamentos e IA Responsável (Dia 01)</li>
+            <li><b>Módulo 2:</b> O motor do Machine Learning (Dia 02)</li>
+            <li><b>Módulo 3:</b> A revolução da IA Generativa (Dia 03)</li>
+            <li><b>Módulo 4:</b> Linguagem, Chatbots e Fala (Dia 04)</li>
+            <li><b>Módulo 5:</b> Visão Computacional e Mineração (Dia 05)</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 1: FUNDAMENTOS</span>
+        <h2>O que é Inteligência Artificial?</h2>
+        <p>A IA é a capacidade de softwares imitarem comportamentos humanos.</p>
+        <div class="highlight-box">
+            <ul>
+                <li><b>Percepção:</b> Ver o mundo (imagens/vídeos).</li>
+                <li><b>Raciocínio:</b> Tirar conclusões de dados incompletos.</li>
+                <li><b>Linguagem:</b> Entender e gerar comunicação humana.</li>
+            </ul>
+        </div>
+        <p>O grande diferencial hoje é o <b>Poder Computacional da Nuvem</b>, que permite processar Big Data em segundos.</p>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 1: FUNDAMENTOS</span>
+        <h2>As 5 Cargas de Trabalho no Azure</h2>
+        <p>Para a prova, você deve identificar qual serviço resolve qual problema:</p>
+        <table>
+            <tr><th>Carga</th><th>Descrição</th></tr>
+            <tr><td><b>Machine Learning</b></td><td>Treinar modelos preditivos com dados.</td></tr>
+            <tr><td><b>Visão Computacional</b></td><td>Analisar imagens e vídeos.</td></tr>
+            <tr><td><b>Linguagem (NLP)</b></td><td>Interpretar texto e fala.</td></tr>
+            <tr><td><b>Mineração</b></td><td>Extrair insights de arquivos PDFs e imagens.</td></tr>
+            <tr><td><b>Anomalias</b></td><td>Identificar padrões incomuns (fraudes).</td></tr>
+        </table>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">IA RESPONSÁVEL</span>
+        <h2>Pilar 1: Equidade (Fairness)</h2>
+        <p>Sistemas de IA devem tratar todas as pessoas de forma imparcial.</p>
+        <ul>
+            <li><b>Risco:</b> Modelos treinados com dados tendenciosos podem discriminar por gênero ou raça.</li>
+            <li><b>Solução:</b> Diversidade nas equipes e nos conjuntos de dados de treinamento.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">IA RESPONSÁVEL</span>
+        <h2>Pilar 2: Confiabilidade e Segurança</h2>
+        <p>A IA deve operar de forma previsível, mesmo em situações de erro.</p>
+        <div class="highlight-box">
+            <p><b>Exemplo Crítico:</b> Um carro autônomo deve ser confiável sob chuva ou neve, protegendo a vida humana acima de tudo.</p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">IA RESPONSÁVEL</span>
+        <h2>Pilar 3: Privacidade e Segurança</h2>
+        <p>Proteção total aos dados sensíveis dos usuários.</p>
+        <ul>
+            <li>Conformidade com leis como <b>LGPD</b> (Brasil).</li>
+            <li>Garantir que dados privados não vazem durante o treinamento do modelo.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">IA RESPONSÁVEL</span>
+        <h2>Pilar 4: Inclusividade</h2>
+        <p>A tecnologia deve servir a todos, incluindo pessoas com deficiências.</p>
+        <div class="highlight-box">
+            <p><b>Exemplos:</b> Leitores de tela para cegos e legendas em tempo real para surdos.</p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">IA RESPONSÁVEL</span>
+        <h2>Pilar 5 e 6: Transparência e Responsabilidade</h2>
+        <p><b>Transparência:</b> O usuário deve saber o "porquê" de uma decisão da IA.</p>
+        <p><b>Responsabilidade (Accountability):</b> Seres humanos devem ter o controle final e responder pelas ações do sistema.</p>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 2: MACHINE LEARNING</span>
+        <h2>O que é Machine Learning?</h2>
+        <p>É o processo de usar dados para encontrar padrões matemáticos e fazer previsões.</p>
+        <ul>
+            <li><b>Features (Recursos/X):</b> As colunas de entrada (ex: metragem, bairro).</li>
+            <li><b>Label (Rótulo/Y):</b> A resposta que queremos prever (ex: preço).</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 2: MACHINE LEARNING</span>
+        <h2>Tipos de Aprendizado Supervisionado</h2>
+        <ol>
+            <li><b>Regressão:</b> Previsão de valores numéricos contínuos (Preço de casa, temperatura).</li>
+            <li><b>Classificação:</b> Previsão de categorias (Spam ou Não, Doente ou Saudável).</li>
+        </ol>
+        <div class="highlight-box">
+            <p><b>Nota:</b> Classificação Binária (2 opções) vs Multiclasse (3 ou mais opções).</p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 2: MACHINE LEARNING</span>
+        <h2>Clustering (Agrupamento)</h2>
+        <p>Quando não temos o rótulo (Y). A máquina agrupa os dados por semelhança.</p>
+        <ul>
+            <li><b>Algoritmo K-Means:</b> Agrupa dados em 'K' grupos baseados na proximidade dos pontos.</li>
+            <li><b>Caso de uso:</b> Segmentação de clientes de um banco sem saber as categorias prévias.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 2: MACHINE LEARNING</span>
+        <h2>Como avaliar a Regressão?</h2>
+        <ul>
+            <li><b>MAE:</b> Média simples do erro absoluto.</li>
+            <li><b>RMSE:</b> Média quadrática que penaliza erros grandes.</li>
+            <li><b>R² (R-Squared):</b> Quão bem o modelo explica os dados (0 a 1). Perto de 1 é ótimo!</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 2: MACHINE LEARNING</span>
+        <h2>Avaliando a Classificação</h2>
+        <p>A <b>Matriz de Confusão</b> mostra onde o modelo acertou e onde errou:</p>
+        <ul>
+            <li><b>Verdadeiro Positivo:</b> Acertou o "Sim".</li>
+            <li><b>Falso Positivo:</b> Alarme falso.</li>
+            <li><b>Falso Negativo:</b> Erro perigoso (não detectou um problema real).</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 2: MACHINE LEARNING</span>
+        <h2>Precisão vs. Recall</h2>
+        <ul>
+            <li><b>Precisão:</b> De todos que marquei como "Sim", quantos eram realmente "Sim"?</li>
+            <li><b>Recall (Revocação):</b> De todos que eram "Sim" no mundo real, quantos eu consegui encontrar?</li>
+        </ul>
+        <p><b>Dica Prova:</b> Em saúde, priorizamos o <b>Recall</b> para não deixar nenhum doente sem diagnóstico.</p>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 2: MACHINE LEARNING</span>
+        <h2>Automated ML (AutoML)</h2>
+        <p>Ferramenta para quem quer rapidez e pouco código.</p>
+        <ul>
+            <li>Ele testa vários algoritmos e hiperparâmetros automaticamente.</li>
+            <li>Ideal para encontrar o melhor modelo rapidamente.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 2: MACHINE LEARNING</span>
+        <h2>Azure ML Designer</h2>
+        <p>Interface visual baseada em <b>arrastar e soltar</b> módulos.</p>
+        <ul>
+            <li>Você cria um pipeline visualmente (Ingestão -> Split -> Treino -> Score).</li>
+            <li>O módulo <b>Split Data</b> é obrigatório para separar treino (70%) e teste (30%).</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 3: IA GENERATIVA</span>
+        <h2>A Revolução da IA Generativa</h2>
+        <p>Diferente da IA tradicional que analisa, a IA Generativa **cria novo conteúdo**.</p>
+        <div class="highlight-box">
+            <p><b>Tradicional:</b> "Isto é um gato?"<br>
+               <b>Generativa:</b> "Crie a imagem de um gato astronauta"</p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 3: IA GENERATIVA</span>
+        <h2>Como as LLMs Funcionam?</h2>
+        <p>Modelos de Linguagem (LLMs) são treinados com bilhões de textos para prever a <b>próxima palavra mais provável</b>.</p>
+        <p>Exemplo: "O céu está..." → a IA prevê "azul" baseada em probabilidade matemática, não em entendimento real.</p>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 3: IA GENERATIVA</span>
+        <h2>O Conceito de Tokens</h2>
+        <p>A IA não lê letras, ela lê **Tokens** (pedaços de palavras).</p>
+        <ul>
+            <li>Cada token tem um custo computacional e financeiro.</li>
+            <li>Respostas muito longas consomem mais tokens e demoram mais.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 3: IA GENERATIVA</span>
+        <h2>Arquitetura Transformer</h2>
+        <p>É o "cérebro" por trás do GPT.</p>
+        <ul>
+            <li><b>Mecanismo de Atenção:</b> Permite que a IA foque nas partes importantes da frase para entender o contexto.</li>
+            <li>Ex: "O aluno estudou porque <b>ele</b> queria passar" → A IA entende que "ele" refere-se ao "aluno".</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 3: IA GENERATIVA</span>
+        <h2>Engenharia de Prompt</h2>
+        <p>O segredo está em como você pergunta. Estrutura ideal:</p>
+        <div class="highlight-box">
+            <p><b>1. Contexto:</b> Quem é você?<br>
+               <b>2. Tarefa:</b> O que deve fazer?<br>
+               <b>3. Formato:</b> Tabela, lista, texto?<br>
+               <b>4. Restrições:</b> O que não deve fazer?</p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 3: IA GENERATIVA</span>
+        <h2>Zero-shot vs. Few-shot</h2>
+        <ul>
+            <li><b>Zero-shot:</b> Pedir sem dar exemplos ("Traduza isto").</li>
+            <li><b>Few-shot:</b> Dar exemplos antes do pedido ("Gato = Cat, Cachorro = Dog, Pássaro = ...").</li>
+            <li><b>Role Prompting:</b> Dar um papel à IA ("Aja como um engenheiro sênior").</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 3: IA GENERATIVA</span>
+        <h2>O Desafio da Alucinação</h2>
+        <p>Ocorre quando a IA gera respostas incorretas com total confiança.</p>
+        <ul>
+            <li><b>Causa:</b> A IA é um modelo probabilístico, não uma enciclopédia.</li>
+            <li><b>Regra de Ouro:</b> Sempre valide as informações geradas por IA.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 3: IA GENERATIVA</span>
+        <h2>RAG: IA + Dados da Empresa</h2>
+        <p><b>Retrieval Augmented Generation (RAG)</b> conecta a IA aos seus dados reais.</p>
+        <div class="highlight-box">
+            <p><b>Como funciona:</b> O sistema busca a informação no seu banco de dados e entrega para a IA formular a resposta final baseada em fatos reais.</p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 4: LINGUAGEM E FALA</span>
+        <h2>O Pipeline de NLP</h2>
+        <p>Como a máquina limpa o texto para processar:</p>
+        <ul>
+            <li><b>Tokenização:</b> Quebra o texto em pedaços.</li>
+            <li><b>Stop Words:</b> Remove palavras comuns sem valor (o, de, a).</li>
+            <li><b>Lematização:</b> Reduz a palavra à sua raiz (correndo → correr).</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 4: LINGUAGEM E FALA</span>
+        <h2>Azure AI Language</h2>
+        <ul>
+            <li><b>Análise de Sentimento:</b> Detecta se um texto é Positivo, Negativo ou Neutro.</li>
+            <li><b>NER (Entidades):</b> Identifica Pessoas, Locais, Datas e Organizações no texto.</li>
+            <li><b>Opinion Mining:</b> Liga o sentimento ao objeto específico (ex: "Bateria ruim").</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 4: LINGUAGEM E FALA</span>
+        <h2>PII Detection: Segurança de Dados</h2>
+        <p>Detecta e mascara informações de identificação pessoal (CPF, Cartão, Endereço).</p>
+        <div class="highlight-box">
+            <p>Fundamental para empresas que precisam cumprir a **LGPD** e proteger a privacidade dos usuários.</p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 4: LINGUAGEM E FALA</span>
+        <h2>CLU: A Tríade dos Chatbots</h2>
+        <table>
+            <tr><th>Termo</th><th>Definição</th><th>Exemplo</th></tr>
+            <tr><td><b>Utterance</b></td><td>O que o usuário disse</td><td>"Reserve um voo"</td></tr>
+            <tr><td><b>Intent</b></td><td>O objetivo (intenção)</td><td><i>ReservarVoo</i></td></tr>
+            <tr><td><b>Entity</b></td><td>O detalhe (parâmetro)</td><td>Para: "Paris"</td></tr>
+        </table>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 4: LINGUAGEM E FALA</span>
+        <h2>A Importância da Intent 'None'</h2>
+        <p>Todo modelo CLU deve ter uma intenção chamada 'None'.</p>
+        <ul>
+            <li>Ela serve para capturar frases que o bot **não sabe resolver**.</li>
+            <li>Sem ela, o bot tentaria "chutar" uma resposta errada para o usuário.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 4: LINGUAGEM E FALA</span>
+        <h2>Azure AI Speech (STT)</h2>
+        <p>Converte fala em texto escrito. Modos:</p>
+        <ul>
+            <li><b>Tempo Real:</b> Legendas ao vivo.</li>
+            <li><b>Batch (Lote):</b> Transcrever horas de gravações de call center.</li>
+            <li><b>Custom Speech:</b> Treinar para sotaques ou termos técnicos médicos/jurídicos.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 4: LINGUAGEM E FALA</span>
+        <h2>Azure AI Speech (TTS)</h2>
+        <p>Converte texto em áudio sintetizado quase humano.</p>
+        <ul>
+            <li><b>Neural Voices:</b> Vozes com entonação e respiração naturais.</li>
+            <li><b>SSML:</b> Linguagem de marcação para controlar velocidade, pausas e ênfase da voz.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 4: LINGUAGEM E FALA</span>
+        <h2>Azure AI Translator</h2>
+        <p>Tradução automática de texto em mais de 100 idiomas.</p>
+        <ul>
+            <li><b>Document Translation:</b> Traduz arquivos (PDF, Word) mantendo a formatação original.</li>
+            <li><b>Detection:</b> Identifica automaticamente o idioma de origem.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 5: VISÃO E MINERAÇÃO</span>
+        <h2>Como o Computador Vê?</h2>
+        <p>Para a máquina, uma imagem é uma **matriz de pixels** (números RGB).</p>
+        <ul>
+            <li><b>CNN (Clássica):</b> Usa filtros para detectar bordas e formas.</li>
+            <li><b>ViT (Moderna):</b> Divide a imagem em pedaços (patches) como se fossem palavras.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 5: VISÃO E MINERAÇÃO</span>
+        <h2>Principais Tarefas de Visão</h2>
+        <ul>
+            <li><b>Classificação:</b> "O que é isto?"</li>
+            <li><b>Detecção de Objetos:</b> "Onde está e o que é?" (Usa Bounding Boxes).</li>
+            <li><b>Segmentação:</b> Delimita o contorno exato do objeto pixel a pixel.</li>
+            <li><b>Tagging:</b> Gera palavras-chave sobre a cena.</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 5: VISÃO E MINERAÇÃO</span>
+        <h2>Azure AI Face</h2>
+        <ul>
+            <li><b>Detecção:</b> Onde estão os rostos na foto?</li>
+            <li><b>Verificação (1:1):</b> Esta pessoa é a mesma do documento?</li>
+            <li><b>Identificação (1:N):</b> Quem é essa pessoa entre mil cadastradas?</li>
+        </ul>
+        <p><b>Importante:</b> Detecção de emoções foi removida por questões éticas.</p>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 5: VISÃO E MINERAÇÃO</span>
+        <h2>OCR: Extração de Texto</h2>
+        <p>Converte imagens de texto em texto pesquisável.</p>
+        <ul>
+            <li>A **Read API** do Azure Vision é a melhor para documentos longos e complexos.</li>
+            <li>Suporta letra de forma e manuscrita (handwriting).</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 5: VISÃO E MINERAÇÃO</span>
+        <h2>Azure AI Document Intelligence</h2>
+        <p>Especializado em formulários estruturados.</p>
+        <ul>
+            <li><b>Modelos Prontos:</b> Notas Fiscais (Invoice), IDs, Recibos e Cartões.</li>
+            <li><b>Custom Models:</b> Você treina com seus próprios formulários específicos.</li>
+            <li>Diferencial: Ele entende a relação **Chave-Valor** (ex: campo "Total" = R$ 100).</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 5: VISÃO E MINERAÇÃO</span>
+        <h2>Azure AI Search</h2>
+        <p>Resolve o problema do **Dark Data** (dados em PDFs e imagens que ninguém consegue pesquisar).</p>
+        <div class="highlight-box">
+            <p>Ele indexa todo o conteúdo e usa IA para tornar arquivos "mudos" em um motor de busca inteligente.</p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">MÓDULO 5: VISÃO E MINERAÇÃO</span>
+        <h2>O Pipeline do AI Search (DECORAR)</h2>
+        <p>Sequência exata do processo:</p>
+        <ol>
+            <li><b>Ingestão:</b> Conecta na fonte (Blob, SQL).</li>
+            <li><b>Cracking:</b> Abre o arquivo e extrai texto/imagens.</li>
+            <li><b>Skillset:</b> Aplica a IA (OCR, Tradução, NER).</li>
+            <li><b>Índice:</b> Cria o banco JSON pesquisável.</li>
+        </ol>
+    </section>
+
+    <section class="slide">
+        <span class="module-tag">FINALIZAÇÃO</span>
+        <h2>Dicas de Ouro para a Prova</h2>
+        <ul>
+            <li>Não confunda **Classificação** (rótulos) com **Clustering** (sem rótulos).</li>
+            <li>**Regressão Logística** é para Classificação (nomes enganam!).</li>
+            <li>**Azure OpenAI** cria conteúdo; **Azure AI Vision** analisa imagens.</li>
+            <li>Sempre responda priorizando a **IA Responsável**.</li>
+        </ul>
+    </section>
+
+    <section class="slide capa">
+        <div style="text-align: center; margin-top: 80px;">
+            <h1 style="font-size: 4rem; color: var(--senai-red); margin: 0;">Parabéns!</h1>
+            <h2 style="border: none; padding: 0; color: var(--dark-blue);">Você concluiu a jornada AI-900.</h2>
+            <p style="font-size: 1.5rem; margin-top: 30px;">"A melhor forma de prever o futuro é criá-lo."</p>
+            <p style="font-weight: bold; margin-top: 50px;">Boa sorte no exame!</p>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    <div class="progress-indicator">Slide <span id="current-slide">1</span> de <span id="total-slides">42</span></div>
+    <div class="nav-controls">
+        <button class="nav-btn" id="prev-btn" disabled>Anterior</button>
+        <button class="nav-btn" id="next-btn">Próximo</button>
+    </div>
+</footer>
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+    let current = 0;
+
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const currentText = document.getElementById('current-slide');
+    const totalText = document.getElementById('total-slides');
+
+    totalText.innerText = total;
+
+    function update() {
+        slides.forEach((s, i) => s.classList.toggle('active', i === current));
+        currentText.innerText = current + 1;
+        prevBtn.disabled = current === 0;
+        nextBtn.disabled = current === total - 1;
+    }
+
+    nextBtn.onclick = () => { if(current < total - 1) { current++; update(); } };
+    prevBtn.onclick = () => { if(current > 0) { current--; update(); } };
+
+    document.onkeydown = (e) => {
+        if(e.key === "ArrowRight") nextBtn.onclick();
+        if(e.key === "ArrowLeft") prevBtn.onclick();
+    };
+</script>
+
+</body>
+</html>
